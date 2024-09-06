@@ -11,6 +11,7 @@ And which would leads to: $O(n \log \log n)$.
 - **Percentile Sort Time**: 140.426072 seconds  
 - **Empty Loop Time for reference (x=input[i])**: 13.414294 seconds
 
+Note: In the above test the duplicates are minimal, but percentile_sort has nature to be faster as the duplicates increase.
 
 ### Pseudocode for `percentile_sort`
 
