@@ -2,9 +2,9 @@
 
 This seems faster than other nlogn sorting algorithms.  Seems to outperform more as the data size grows and more duplicate elements exist
 
-The The time complexity seems to be: $T(n) = \sqrt{n} \cdot T(\sqrt{n}) + O(n)$.
+The time complexity seems to be: $T(n) = \sqrt{n} \cdot T(\sqrt{n}) + O(n)$.
 
-And it leads to: $O(n \log \log n)$.
+And which would leads to: $O(n \log \log n)$.
 
 **Sample Test Result** 
 -----------------------
