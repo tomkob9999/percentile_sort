@@ -34,8 +34,8 @@ percentile_sort(input_array):
   num_buckets = max(2, square_root(size(input_array)))  -- O(1)
 
   foreach value in input_array  -- loops n times, time complexity O(n)
-    bucket_index = integer((value - min_value)/(max_value - min_value) * num_buckets)  -- O(1)
-    buckets[bucket_index].append(value)
+     bucket_index = integer((value - min_value)/(max_value - min_value) * num_buckets)  -- O(1)
+     buckets[bucket_index].append(value)
 
   foreach bucket in buckets  -- loop square_root(n) times, time complexity T(square_root(n))
      if bucket is not empty
