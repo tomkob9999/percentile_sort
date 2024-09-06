@@ -37,9 +37,6 @@ percentile_sort(input_array):
     bucket_index = integer((value - min_value)/(max_value - min_value) * num_buckets)  -- O(1)
     buckets[bucket_index].append(value)
 
-  if {number of non-empty buckets} == 1 then  -- O(1)
-     return {non-empty bucket in buckets}
-
   foreach bucket in buckets  -- loop square_root(n) times, time complexity T(square_root(n))
      if bucket is not empty
         sorted_buckets.append(percentile_sort(bucket))  -- recursive call
