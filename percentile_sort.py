@@ -2,7 +2,7 @@
 # percentile_sort
 #
 # Description: a divide and conquer sort algorithm that splits by square root percentiles instead of ranks
-# Version: 1.0.3
+# Version: 1.0.4
 # Author: Tomio Kobayashi
 # Last Update: 2024/9/7
 
@@ -19,9 +19,7 @@ def percentile_sort(arr):
         return arr
     elif len(arr) == 2:
         if arr[0]>arr[1]:
-            a = arr[1]
-            arr[1] = arr[0]
-            arr[0] = a
+            arr[0], arr[1] = arr[1], arr[0]
         return arr
 
     # Step 1: Find the min and max
