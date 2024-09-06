@@ -2,7 +2,7 @@
 # percentile_sort
 #
 # Description: a divide and conquer sort algorithm that splits by square root percentiles instead of ranks
-# Version: 1.0.4
+# Version: 1.0.5
 # Author: Tomio Kobayashi
 # Last Update: 2024/9/7
 
@@ -10,7 +10,6 @@ import numpy as np
 import math
 
 # # Function to find the minimum and maximum of a vector
-
 # Recursive function to split the array into vectors and merge them
 def percentile_sort(arr):
     
@@ -24,29 +23,22 @@ def percentile_sort(arr):
 
     # Step 1: Find the min and max
     min_val, max_val = min(arr), max(arr)
-
-    # Step 2: If all elements are the same, return the array
     if min_val == max_val:
         return arr
 
-    # Step 3: Determine the number of sub-vectors (size log(n))
-    n = len(arr)
-
-    num_buckets = max(2, int(math.sqrt(n)))  # Using square_root(n) as the number of sub-vectors
-    
+    # Step 3: Determine the number of sub-vectors (size sqrt(n))
+    num_buckets = max(2, int(math.sqrt(len(arr))))  # Using square_root(n) as the number of sub-vectors
     buckets = [[] for _ in range(num_buckets)]
 
     # Step 4: Insert elements into corresponding buckets based on percentile
     for value in arr:
         # Calculate the bucket index based on the value's percentile between min and max
-        bucket_index = min(num_buckets - 1, int((value - min_val) / (max_val - min_val) * num_buckets))
-        buckets[bucket_index].append(value)
+        buckets[min(num_buckets - 1, int((value - min_val) / (max_val - min_val) * num_buckets))].append(value)
         
     # Step 5: Merge buckets
     sorted_buckets = []
     for bucket in buckets:
-        if bucket:
-            sorted_buckets.extend(percentile_sort(bucket))
+        sorted_buckets += percentile_sort(bucket)
     return sorted_buckets
 
 # Example usage
