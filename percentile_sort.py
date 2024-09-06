@@ -1,10 +1,10 @@
 #
 # percentile_sort
 #
-# Description: a divide and conquert sort algorithm that splits by square root percentiles instead of ranks
-# Version: 1.0.2
+# Description: a divide and conquer sort algorithm that splits by square root percentiles instead of ranks
+# Version: 1.0.3
 # Author: Tomio Kobayashi
-# Last Update: 2024/9/6
+# Last Update: 2024/9/7
 
 import numpy as np
 import math
@@ -13,6 +13,7 @@ import math
 
 # Recursive function to split the array into vectors and merge them
 def percentile_sort(arr):
+    
     # Base case: If the vector contains a single element, return it
     if len(arr) <= 1:
         return arr
@@ -42,10 +43,7 @@ def percentile_sort(arr):
         # Calculate the bucket index based on the value's percentile between min and max
         bucket_index = min(num_buckets - 1, int((value - min_val) / (max_val - min_val) * num_buckets))
         buckets[bucket_index].append(value)
-
-    if sum([1 for b in buckets if len(b) > 0]) == 1:
-        return [b for b in buckets if len(b) > 0][0]
-
+        
     # Step 5: Merge buckets
     sorted_buckets = []
     for bucket in buckets:
@@ -55,7 +53,8 @@ def percentile_sort(arr):
 
 # Example usage
 n = 16  # Size of the vector
-vector = np.random.randint(1, 101, size=n)  # Generate a random vector of integers between 1 and 100
+# vector = np.random.randint(1, 101, size=n)  # Generate a random vector of integers between 1 and 100
+vector = np.random.random(size=n) * 100 + 1
 
 print("Original vector:", vector)
 
