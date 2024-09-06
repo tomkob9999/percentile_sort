@@ -6,11 +6,10 @@ The The time complexity seems to be: $T(n) = \sqrt{n} \cdot T(\sqrt{n}) + O(n)$.
 
 And it leads to: $O(n \log \log n)$.
 
-
-
-![sort](https://github.com/user-attachments/assets/cc0d1a65-f41e-4850-82bb-4863b662d7d0)
-
-
+**Sample Test Result** 
+-----------------------
+**Randomized Quick Sort Time**: 2.969356 seconds  
+**Percentile Sort Time**: 0.790805 seconds
 
 ### Pseudocode for `percentile_sort`
 
