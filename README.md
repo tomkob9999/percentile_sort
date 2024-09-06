@@ -9,7 +9,7 @@ And which would leads to: $O(n \log \log n)$.
 **Sample Test Result** (with vector of size 5,000,000 filled with random integers between 1 and 5,000,000)  
 - **Randomized Quick Sort Time**: 46.416540 seconds  
 - **Percentile Sort Time**: 19.905263 seconds  
-- **Empty Loop Time for reference (x=input[i])**: 0.908326 seconds
+- **Empty Loop Time (x=input[i])**: 0.908326 seconds
 - On a side note, while this test data contains a small portion of duplicates, percentile_sort shows tendency to be faster as duplicates increase.
 
 ### Pseudocode for `percentile_sort`
