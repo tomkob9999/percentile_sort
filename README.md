@@ -10,7 +10,7 @@ And which would leads to: $O(n \log \log n)$.
 - **Randomized Quick Sort Time**: 311.752380 seconds  
 - **Percentile Sort Time**: 140.426072 seconds  
 - **Empty Loop Time for reference (x=input[i])**: 13.414294 seconds
-- Note: percentile_sort has nature to be faster as the duplicates increase.
+- Note: percentile_sort shows tendency to be faster as the duplicates increase.
 
 ### Pseudocode for `percentile_sort`
 
