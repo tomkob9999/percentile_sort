@@ -6,11 +6,11 @@ The time complexity seems to be: $T(n) = \sqrt{n} \cdot T(\sqrt{n}) + O(n)$.
 
 And which would leads to: $O(n \log \log n)$.
 
-**Sample Test Result** (with vector of size 10,000,000 filled with random integers between 1 and 10,000,000)  
-- **Randomized Quick Sort Time**: 119.866215 seconds  
-- **Percentile Sort Time**: 64.444059 seconds  
-- **Empty Loop Time for reference (x=input[i])**: 3.323574 seconds
-- Note: While this test data contains small number of duplicates, percentile_sort shows tendency to be faster as duplicates increase.
+**Sample Test Result** (with vector of size 5,000,000 filled with random integers between 1 and 5,000,000)  
+- **Randomized Quick Sort Time**: 46.416540 seconds  
+- **Percentile Sort Time**: 19.905263 seconds  
+- **Empty Loop Time for reference (x=input[i])**: 0.908326 seconds
+- On a side note, while this test data contains a small portion of duplicates, percentile_sort shows tendency to be faster as duplicates increase.
 
 ### Pseudocode for `percentile_sort`
 
