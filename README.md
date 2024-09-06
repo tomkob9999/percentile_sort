@@ -21,9 +21,7 @@ percentile_sort(input_array):
      return input_array
   else if size(input_array) <= 2 then
      if input_array[1] < input_array[0] then
-        tmp = input_array[1]
-        input_array[1] = input_array[0]
-        input_array[0] = tmp
+        input_array[0], input_array[1] = input_array[1], input_array[0]
 
   min_value = min(input_array)  -- O(1)
   max_value = max(input_array)  -- O(1)
