@@ -36,7 +36,6 @@ percentile_sort(input_array):
      buckets[bucket_index].append(value)
 
   foreach bucket in buckets  -- loop square_root(n) times, time complexity T(square_root(n))
-     if bucket is not empty
         sorted_buckets.append(percentile_sort(bucket))  -- recursive call
 
   return sorted_buckets
