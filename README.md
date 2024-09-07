@@ -11,7 +11,21 @@ And which would leads to: $O(n \log \log n)$.
 - **Percentile Sort Time**: 19.905263 seconds  
 - **Do-Nothing Loop Time**: 0.908326 seconds
 - On a side note, while this test data contains a small portion of duplicates, percentile_sort shows tendency to be faster as duplicates increase.
-- With input size 1000000 of integers, Randomized Quick Sort had recursion depth of 45, and Percentile Sort had depth of 4.   When the data was float, Quick Sort has depth 50 whereas Percentile Sort had depth of up to 10 (even with 5x inputs, and with integers and more duplicates, Percentile Sort has significantly shallower recursions.)  The result is consistent with expected time complexity of O(nloglogn).
+
+Another Sample Test Statistics with Input Data of size 1000000
+
+Float type
+| Sort Type              | Recursion Depth | Number of calls | Average Input Size |
+|------------------------|-----------------|-----------------|--------------------|
+| Percentile Sort         | 10               | 1105716          | 5.46              |
+| Randomized Quick Sort   | 51              | 1333631          | 18.99             |
+
+Integer Type
+| Sort Type              | Recursion Depth | Number of calls | Average Input Size |
+|------------------------|-----------------|-----------------|--------------------|
+| Percentile Sort         | 4                | 193389          | 20.68              |
+| Randomized Quick Sort   | 41               | 199911          | 102.60             |
+
 
 
 ### Pseudocode for `percentile_sort`
