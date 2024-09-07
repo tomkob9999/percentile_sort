@@ -33,9 +33,10 @@ percentile_sort(input_array):
 
   foreach value in input_array  -- loops n times, time complexity O(n)
      bucket_index = integer((value - min_value)/(max_value - min_value) * num_buckets)  -- O(1)
-     buckets[bucket_index].append(value)
+     append value to buckets[bucket_index]
 
   foreach bucket in buckets  -- loop square_root(n) times, time complexity T(square_root(n))
-        sorted_buckets.append(percentile_sort(bucket))  -- recursive call
+        call percentile_sort(bucket)  -- recursive call
+        append return vector to sorted_buckets
 
   return sorted_buckets
