@@ -25,7 +25,7 @@ Integer Type
 | Percentile Sort         | 4                | 193389          | 20.68              |
 | Randomized Quick Sort   | 41               | 199911          | 102.60             |
 
-As by-product,  a static Van-Edme-Boas-like tree is generated as output.  The time complexity of matching search is: $T(n) = T(\sqrt{n}) + O(1)$, which leads to: $O(\log \log n)$.  However, the toy Python implementation seems a little slower for the complexity of constant part despite the fewer search steps.  It probably is better to use hash table or ordered array output for search.
+As by-product,  a Van-Edme-Boas-like tree is generated as output.  The time complexity of matching search is: $T(n) = T(\sqrt{n}) + O(1)$, which leads to: $O(\log \log n)$.  The generated tree current does not have updating features.
 
 ### Pseudocode for `percentile_sort`
 
