@@ -12,6 +12,10 @@ And which would leads to: $O(n \log \log n)$.
 - **Do-Nothing Loop Time**: 0.908326 seconds
 - On a side note, while this test data contains a small portion of duplicates, percentile_sort shows tendency to be faster as duplicates increase.
 
+
+As by-product,  Van Edme Boas type tree is generated as output.  The time complexity of its search is: $T(n) = \cdot T(\sqrt{n}) + O(1)$, which leads to: $O(\log \log n)$.
+
+
 Another Sample Test Statistics with Input Data of size 1000000
 
 Float type
