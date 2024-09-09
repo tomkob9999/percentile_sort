@@ -4,9 +4,9 @@
 # Description: a divide and conquer sort algorithm that splits by square root percentiles instead of ranks
 # This generatates a Van Emde Boas like tree that is accessible with O(loglogn) as by-product
 #
-# Version: 1.0.7
+# Version: 1.0.8
 # Author: Tomio Kobayashi
-# Last Update: 2024/9/9
+# Last Update: 2024/9/10
 
 import numpy as np
 
@@ -18,13 +18,11 @@ class btre:
         self.children = []
         self.value1 = None
         self.value2 = None
-        self.explored = {}
 
     def search(self, v):
         return self.searchme(v, self)
     
     def searchme(self, v, bb):
-
         if bb.value1 is not None:
             if v == bb.value1 or v == bb.value2:
                 return True
@@ -34,10 +32,10 @@ class btre:
         ind = min(num_buckets - 1, int((v - bb.min) / (bb.max - bb.min) * num_buckets))
         if  ind < 0 or ind > len(bb.children)-1:
             return False
-        return self.searchme(v, bb.children[ind])
+        else:
+            return self.searchme(v, bb.children[ind])
     
     def search_from(self, s):
-        self.explored = {}
         vals = []
         self.searchme_from(self, s, vals)
         return vals
@@ -57,7 +55,6 @@ class btre:
                     self.searchme_from(b, s, vals)
 
     def search_to(self, s):
-        self.explored = {}
         vals = []
         self.searchme_to(self, s, vals)
         return vals
@@ -78,7 +75,6 @@ class btre:
                     
     
     def search_range(self, s, f):
-        self.explored = {}
         vals = []
         self.searchme_range(self, s, f, vals)
         return vals
@@ -142,18 +138,21 @@ def percentile_sort(arr, bb=None):
     # Step 5: Merge buckets
     sorted_buckets = []
     for bucket in buckets:
-        if bb is not None:
-            bb.children.append(btre())
-        sorted_buckets += percentile_sort(bucket, bb.children[-1])
+        if bucket:
+            if bb is None :
+                sorted_buckets += percentile_sort(bucket)
+            else:
+                bb.children.append(btre())
+                sorted_buckets += percentile_sort(bucket, bb.children[-1])
     return sorted_buckets
 
 # Example usage
 # n = 16  # Size of the vector
 # vector = np.random.randint(1, 101, size=n)  # Generate a random vector of integers between 1 and 100
-# n = 100000  # Size of the vector
-# vector = np.random.randint(1, n, size=n)  # Generate a random vector of integers between 1 and 100
-n = 1000000
-vector = np.random.random(size=n) * n
+n = 100000  # Size of the vector
+vector = np.random.randint(1, n, size=n)  # Generate a random vector of integers between 1 and 100
+# n = 1000000
+# vector = np.random.random(size=n) * n
 
 print("Original vector:", vector[:50])
 
@@ -167,16 +166,18 @@ print("Sorted vector:", sorted_vector[:50])
 import time
 print("Search")
 start_time = time.time()
-ret = bbb.search(int(n/2))
+# ret = bbb.search(int(n/2))
+ret = bbb.search(101)
 air_time = time.time() - start_time
 print(ret)
 print(f"Execution Time: {air_time:.6f} seconds")
 
-start_time = time.time()
-xx = bbb.search_range(13, 49)
-air_time = time.time() - start_time
-print(xx[:10])
-print(f"Execution Time: {air_time:.6f} seconds")
+# start_time = time.time()
+# # xx = bbb.search_range(13, 49)
+# xx = bbb.search_range(1000, 2000)
+# air_time = time.time() - start_time
+# print(xx[:10])
+# print(f"Execution Time: {air_time:.6f} seconds")
 
 # print(bbb.search_from(13))
 # print(bbb.search_to(49))
@@ -186,3 +187,4 @@ print(f"Execution Time: {air_time:.6f} seconds")
 #     ret = bbb.search(i)
 #     if ret:
 #         print("bbb ", i, bbb.search(i))
+
