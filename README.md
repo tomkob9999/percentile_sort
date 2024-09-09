@@ -2,9 +2,9 @@
 
 This seems faster than other nlogn sorting algorithms.  Seems to outperform more as the data size grows and more duplicate elements exist
 
-The time complexity seems to be: $T(n) = \sqrt{n} \cdot T(\sqrt{n}) + O(n)$, which would leads to: $O(n \log \log n)$.
+The time complexity seems to be: $T(n) = \sqrt{n} \cdot T(\sqrt{n}) + O(n)$, which would lead to: $O(n \log \log n)$.
 
-As by-product,  a Van-Edme-Boas-like tree is generated as output.  The time complexity of its search is: $T(n) = \cdot T(\sqrt{n}) + O(1)$, which leads to: $O(\log \log n)$.
+As by-product,  a static Van-Edme-Boas-like tree is generated as output.  The time complexity of its search is: $T(n) = \cdot T(\sqrt{n}) + O(1)$, which leads to: $O(\log \log n)$.  The time complexity of range search seems: $T(n) = \cdot T(\sqrt{n}) + O(k)$, which would lead to: $O(k\log \log n)$ where n is the size of input and k is the size of the output.
 
 **Sample Test Result** (with vector of size 5,000,000 filled with random integers between 1 and 5,000,000)  
 - **Randomized Quick Sort Time**: 46.416540 seconds  
