@@ -4,7 +4,7 @@
 # Description: a divide and conquer sort algorithm that splits by square root percentiles instead of ranks
 # This generatates a Van Emde Boas like tree that is accessible with O(loglogn) as by-product
 #
-# Version: 1.0.6
+# Version: 1.0.7
 # Author: Tomio Kobayashi
 # Last Update: 2024/9/9
 
@@ -18,6 +18,7 @@ class btre:
         self.children = []
         self.value1 = None
         self.value2 = None
+        self.explored = {}
 
     def search(self, v):
         return self.searchme(v, self)
@@ -34,7 +35,69 @@ class btre:
         if  ind < 0 or ind > len(bb.children)-1:
             return False
         return self.searchme(v, bb.children[ind])
+    
+    def search_from(self, s):
+        self.explored = {}
+        vals = []
+        self.searchme_from(self, s, vals)
+        return vals
+        
+    def searchme_from(self, bb, s, vals):
+        if bb.value1 is not None:
+            if bb.value1 >= s:
+                vals.append(bb.value1)
+                if bb.value2 is not None and bb.value2 >= s:
+                    vals.append(bb.value2)
+                return
+        else:
+            if s > bb.max:
+                return
+            else:
+                for b in bb.children:
+                    self.searchme_from(b, s, vals)
 
+    def search_to(self, s):
+        self.explored = {}
+        vals = []
+        self.searchme_to(self, s, vals)
+        return vals
+    
+    def searchme_to(self, bb, s, vals):
+        if bb.value1 is not None:
+            if bb.value1 <= s:
+                vals.append(bb.value1)
+                if bb.value2 is not None and bb.value2 <= s:
+                    vals.append(bb.value2)
+                return
+        else:
+            if s < bb.min:
+                return
+            else:
+                for b in bb.children:
+                    self.searchme_to(b, s, vals)
+                    
+    
+    def search_range(self, s, f):
+        self.explored = {}
+        vals = []
+        self.searchme_range(self, s, f, vals)
+        return vals
+        
+    def searchme_range(self, bb, s, f, vals):
+        if bb.value1 is not None:
+            if bb.value1 >= s and bb.value1 <= f:
+                vals.append(bb.value1)
+                if bb.value2 is not None and bb.value2 >= s and bb.value2 <= f:
+                    vals.append(bb.value2)
+                return
+        else:
+            if s > bb.max or f < bb.min:
+                return
+            else:
+                for b in bb.children:
+                    self.searchme_range(b, s, f, vals)
+                    
+                    
 import numpy as np
 import math
 
@@ -85,11 +148,11 @@ def percentile_sort(arr, bb=None):
     return sorted_buckets
 
 # Example usage
-# n = 16  # Size of the vector
-# vector = np.random.randint(1, 101, size=n)  # Generate a random vector of integers between 1 and 100
-n = 1000000  # Size of the vector
-vector = np.random.randint(1, n*100, size=n)  # Generate a random vector of integers between 1 and 100
-# vector = np.random.random(size=n) * 100 + 1
+n = 16  # Size of the vector
+vector = np.random.randint(1, 101, size=n)  # Generate a random vector of integers between 1 and 100
+# n = 1000000  # Size of the vector
+# vector = np.random.randint(1, n*100, size=n)  # Generate a random vector of integers between 1 and 100
+# # vector = np.random.random(size=n) * 100 + 1
 
 print("Original vector:", vector[:50])
 
@@ -107,6 +170,10 @@ ret = bbb.search(int(n/2))
 air_time = time.time() - start_time
 print(ret)
 print(f"Execution Time: {air_time:.6f} seconds")
+
+print(bbb.search_from(13))
+print(bbb.search_to(49))
+print(bbb.search_range(13, 49))
 
 # for i in range(1, 50, 1):
 #     ret = bbb.search(i)
