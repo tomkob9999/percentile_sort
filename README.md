@@ -6,14 +6,13 @@ The time complexity seems to be: $T(n) = \sqrt{n} \cdot T(\sqrt{n}) + O(n)$.
 
 And which would leads to: $O(n \log \log n)$.
 
+As by-product,  a Van-Edme-Boas-type tree (ide) is generated as output.  The time complexity of its search is: $T(n) = \cdot T(\sqrt{n}) + O(1)$, which leads to: $O(\log \log n)$.
+
 **Sample Test Result** (with vector of size 5,000,000 filled with random integers between 1 and 5,000,000)  
 - **Randomized Quick Sort Time**: 46.416540 seconds  
 - **Percentile Sort Time**: 19.905263 seconds  
 - **Do-Nothing Loop Time**: 0.908326 seconds
 - On a side note, while this test data contains a small portion of duplicates, percentile_sort shows tendency to be faster as duplicates increase.
-
-
-As by-product,  Van Edme Boas type tree is generated as output.  The time complexity of its search is: $T(n) = \cdot T(\sqrt{n}) + O(1)$, which leads to: $O(\log \log n)$.
 
 
 Another Sample Test Statistics with Input Data of size 1000000
