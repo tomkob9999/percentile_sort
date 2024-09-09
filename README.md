@@ -13,7 +13,7 @@ As by-product,  a Van-Edme-Boas-type tree (ide) is generated as output.  The tim
 - On a side note, while this test data contains a small portion of duplicates, percentile_sort shows tendency to be faster as duplicates increase.
 
 
-Another Sample Test Statistics with Input Data of size 1000000
+Sample Test Statistics with another input data of size 1,000,000.  The time complexity was equivalent of above.
 
 Float type
 | Sort Type              | Recursion Depth | Number of calls | Average Input Size |
