@@ -148,11 +148,12 @@ def percentile_sort(arr, bb=None):
     return sorted_buckets
 
 # Example usage
-n = 16  # Size of the vector
-vector = np.random.randint(1, 101, size=n)  # Generate a random vector of integers between 1 and 100
-# n = 1000000  # Size of the vector
-# vector = np.random.randint(1, n*100, size=n)  # Generate a random vector of integers between 1 and 100
-# # vector = np.random.random(size=n) * 100 + 1
+# n = 16  # Size of the vector
+# vector = np.random.randint(1, 101, size=n)  # Generate a random vector of integers between 1 and 100
+# n = 100000  # Size of the vector
+# vector = np.random.randint(1, n, size=n)  # Generate a random vector of integers between 1 and 100
+n = 1000000
+vector = np.random.random(size=n) * n
 
 print("Original vector:", vector[:50])
 
@@ -171,9 +172,15 @@ air_time = time.time() - start_time
 print(ret)
 print(f"Execution Time: {air_time:.6f} seconds")
 
-print(bbb.search_from(13))
-print(bbb.search_to(49))
-print(bbb.search_range(13, 49))
+start_time = time.time()
+xx = bbb.search_range(13, 49)
+air_time = time.time() - start_time
+print(xx[:10])
+print(f"Execution Time: {air_time:.6f} seconds")
+
+# print(bbb.search_from(13))
+# print(bbb.search_to(49))
+# print(bbb.search_range(13, 49))
 
 # for i in range(1, 50, 1):
 #     ret = bbb.search(i)
