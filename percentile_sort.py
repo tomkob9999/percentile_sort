@@ -4,7 +4,7 @@
 # Description: a divide and conquer sort algorithm that splits by square root percentiles instead of ranks
 # This generatates a Van Emde Boas like tree that is accessible with O(loglogn) as by-product
 #
-# Version: 1.0.9
+# Version: 1.0.10
 # Author: Tomio Kobayashi
 # Last Update: 2024/9/10
 
@@ -23,13 +23,13 @@ class btre:
         return self.searchme(v, self)
     
     def searchme(self, v, bb):
-        if bb.len == -1:
-            return False
         if bb.value1 is not None:
             if v == bb.value1 or v == bb.value2:
                 return True
             else:
                 return False
+        if bb.len == -1:
+            return False
         num_buckets = max(2, int(math.sqrt(bb.len))) 
         ind = min(num_buckets - 1, int((v - bb.min) / (bb.max - bb.min) * num_buckets))
         if  ind < 0 or ind > len(bb.children)-1:
@@ -152,45 +152,3 @@ def percentile_sort(arr, bb=None):
             bb.children.append(btre())
             sorted_buckets += percentile_sort(bucket, bb.children[-1])
     return sorted_buckets
-
-# Example usage
-# n = 16  # Size of the vector
-# vector = np.random.randint(1, 101, size=n)  # Generate a random vector of integers between 1 and 100
-# n = 1000000  # Size of the vector
-# vector = np.random.randint(1, n, size=n)  # Generate a random vector of integers between 1 and 100
-n = 500000
-vector = np.random.random(size=n) * n
-
-print("Original vector:", vector[:50])
-
-bbb = btre()
-sorted_vector = percentile_sort(vector.tolist(), bbb)
-
-# Display the sorted vector
-print("Sorted vector:", sorted_vector[:50])
-
-# Perform the recursive sort
-import time
-print("Search")
-start_time = time.time()
-# ret = bbb.search(int(n/2))
-ret = bbb.search(101)
-air_time = time.time() - start_time
-print(ret)
-print(f"Execution Time: {air_time:.6f} seconds")
-
-# start_time = time.time()
-# # xx = bbb.search_range(13, 49)
-# xx = bbb.search_range(1000, 2000)
-# air_time = time.time() - start_time
-# print(xx[:10])
-# print(f"Execution Time: {air_time:.6f} seconds")
-
-# print(bbb.search_from(13))
-# print(bbb.search_to(49))
-# print(bbb.search_range(13, 49))
-
-# for i in range(1, 50, 1):
-#     ret = bbb.search(i)
-#     if ret:
-#         print("bbb ", i, bbb.search(i))
