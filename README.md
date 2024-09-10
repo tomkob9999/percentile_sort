@@ -56,6 +56,4 @@ percentile_sort(input_array):
 
   return sorted_buckets
 ```
-# evenly_split_sort
-
-evenly_split_sort, another variation, have been added.  The input data in each recursive call is splitted evenly by square root based on the initial input data, instead of splitting based on its own input range.  As a result, the output tree data becomes easier to be maintained while the original version's output tree data is almost impossible to update.  The new tree output should be inserted/deleted in O(loglogn) time complexity unless the new value does not go out of the original original range of min and max.  The output is functional for only integers as the splitting ends when it is lower than 1.
+value does not go out of the original original range of min and max.  The output is functional for only integers as the splitting ends when it is lower than 1.
