@@ -4,7 +4,7 @@
 # Description: a divide and conquer sort algorithm that splits by square root percentiles instead of ranks
 # This generatates a Van Emde Boas like tree that is accessible with O(loglogn) as by-product
 #
-# Version: 1.1.3
+# Version: 1.1.4
 # Author: Tomio Kobayashi
 # Last Update: 2024/9/11
 
@@ -105,6 +105,22 @@ class btre:
         return vals
 
 
+#     def searchme_range(self, bb, s, f, vals):
+#         if bb.value1 is not None:
+#             if bb.value1 >= s and bb.value1 <= f:
+#                 vals.append(bb.value1)
+#                 if bb.value2 is not None and bb.value2 >= s and bb.value2 <= f:
+#                     vals.append(bb.value2)
+#                 return bb
+#         else:
+#             if s > bb.max or f < bb.min:
+#                 return None
+#             else:
+#                 for b in bb.children:
+#                     pos = self.searchme_range(b, s, f, vals)
+#                     if vals:
+#                         return pos
+                    
     def searchme_range(self, bb, s, f, vals):
         if bb.value1 is not None:
             if bb.value1 >= s and bb.value1 <= f:
@@ -112,16 +128,20 @@ class btre:
                 if bb.value2 is not None and bb.value2 >= s and bb.value2 <= f:
                     vals.append(bb.value2)
                 return bb
-        else:
-            if s > bb.max or f < bb.min:
+        else: 
+            if bb.len == -1 or not bb.children:
                 return None
-            else:
-                for b in bb.children:
-                    pos = self.searchme_range(b, s, f, vals)
-                    if vals:
-                        return pos
-                    
-                    
+            num_buckets = max(2, int(math.sqrt(bb.len))) 
+            ind = min(num_buckets - 1, int((s - bb.min) / (bb.max - bb.min) * num_buckets))
+            if ind > len(bb.children)-1:
+                return None
+            for i in range(0, len(bb.children), 1):
+                pos = self.searchme_range(bb.children[i], s, f, vals)
+                if pos:
+                    return pos
+            return None
+            
+    
 import numpy as np
 import math
 
@@ -178,3 +198,34 @@ def percentile_sort(arr, bb=None, link=False):
         bb.link(sorted_buckets)
         
     return sorted_buckets
+
+
+# # Example usage
+# n = 100  # Size of the vector
+# vector = np.random.randint(1, 101, size=n)  # Generate a random vector of integers between 1 and 100
+# # vector = np.random.random(size=n) * n
+# # n = 100000  # Size of the vector
+# # vector = np.random.randint(1, n, size=n)  # Generate a random vector of integers between 1 and 100
+# # n = 500000
+# # vector = np.random.random(size=n) * n
+
+# print("Original vector:", vector[:50])
+
+
+# # Perform the recursive sort
+import time
+print("percentile_sort")
+start_time = time.time()
+# sorted_vector = percentile_sort(vector.tolist())
+bbb = btre()
+sorted_vector = percentile_sort(vector.tolist(), bbb, link=True)
+# sorted_vector = percentile_sort(vector.tolist())
+air_time = time.time() - start_time
+print(f"Execution Time: {air_time:.6f} seconds")
+
+
+print("Sorted vector:")
+print("Percentile sorted vector:")
+print(sorted_vector[:50])
+# print(sorted_vector)
+print("len(sorted_vector)", len(sorted_vector))
