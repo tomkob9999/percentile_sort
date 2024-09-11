@@ -4,7 +4,7 @@
 # Description: a divide and conquer sort algorithm that splits by square root percentiles instead of ranks
 # This generatates a Van Emde Boas like tree that is accessible with O(loglogn) as by-product
 #
-# Version: 1.1.0
+# Version: 1.1.1
 # Author: Tomio Kobayashi
 # Last Update: 2024/9/11
 
@@ -63,16 +63,13 @@ class btre:
     def search_from(self, s):
         vals = []
         pos = self.last
-        while True:
-            if pos:
-                if pos.value1 and pos.value1 >= s:
-                    vals.append(pos.value1)
-                else:
-                    break
-                if pos.value2 and pos.value2 >= s:
-                    vals.append(pos.value2)
+        while pos:
+            if pos.value1 and pos.value1 >= s:
+                vals.append(pos.value1)
             else:
                 break
+            if pos.value2 and pos.value2 >= s:
+                vals.append(pos.value2)
             pos = pos.left
         vals.reverse()
         return vals
@@ -81,39 +78,31 @@ class btre:
     def search_to(self, s):
         vals = []
         pos = self.top
-        while True:
-            if pos:
-                if pos.value1 and pos.value1 <= s:
-                    vals.append(pos.value1)
-                else:
-                    break
-                if pos.value2 and pos.value2 <= s:
-                    vals.append(pos.value2)
+        while pos:
+            if pos.value1 and pos.value1 <= s:
+                vals.append(pos.value1)
             else:
                 break
+            if pos.value2 and pos.value2 <= s:
+                vals.append(pos.value2)
             pos = pos.right
         return vals
-
     
     def search_range(self, s, f):
         vals = []
         pos = self.searchme_range(self, s, f, vals)
-        while True:
-            pos = pos.right
-            if pos:
-                if pos.value1 and pos.value1 <= f:
-                    vals.append(pos.value1)
-                else:
-                    break
-                if pos.value2 and pos.value2 <= f:
-                    vals.append(pos.value2)
-                else:
-                    continue
+        pos = pos.right
+        while pos:
+            if pos.value1 and pos.value1 <= f:
+                vals.append(pos.value1)
             else:
                 break
-#         print("vals", vals)
+            if pos.value2 and pos.value2 <= f:
+                vals.append(pos.value2)
+            pos = pos.right
         return vals
-        
+
+
     def searchme_range(self, bb, s, f, vals):
         if bb.value1 is not None:
             if bb.value1 >= s and bb.value1 <= f:
@@ -138,7 +127,6 @@ import math
 # Recursive function to split the array into vectors and merge them
 def percentile_sort(arr, bb=None, link=False):
     
-    # Base case: If the vector contains a single element, return it
     if len(arr) <= 1:
         if bb is not None and len(arr) == 1:
             bb.value1 = arr[0]
@@ -155,7 +143,7 @@ def percentile_sort(arr, bb=None, link=False):
                 bb.value2 = arr[1]
         return arr
 
-    # Step 1: Find the min and max
+    # Find the min and max
     min_val, max_val = min(arr), max(arr)
     if min_val == max_val:
         bb.value1 = min_val
@@ -166,16 +154,15 @@ def percentile_sort(arr, bb=None, link=False):
         bb.min = min_val
         bb.max = max_val
     
-    # Step 3: Determine the number of sub-vectors (size sqrt(n))
     num_buckets = max(2, int(math.sqrt(len(arr))))  # Using square_root(n) as the number of sub-vectors
     buckets = [[] for _ in range(num_buckets)]
 
-    # Step 4: Insert elements into corresponding buckets based on percentile
+    # Insert elements into corresponding buckets based on percentile
     for value in arr:
         # Calculate the bucket index based on the value's percentile between min and max
         buckets[min(num_buckets - 1, int((value - min_val) / (max_val - min_val) * num_buckets))].append(value)
         
-    # Step 5: Merge buckets
+    # Merge buckets
     sorted_buckets = []
     for bucket in buckets:
         if bb is None :
