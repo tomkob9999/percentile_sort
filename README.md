@@ -25,7 +25,7 @@ Integer Type
 | Percentile Sort         | 4                | 193389          | 20.68              |
 | Randomized Quick Sort   | 41               | 199911          | 102.60             |
 
-As by-product,  a static Van-Edme-Boas-like tree is generated as output.  The time complexity of matching search is: $T(n) = T(\sqrt{n}) + O(1)$, which leads to: $O(\log \log n)$.
+As by-product,  a static van-Edme-Boas-like tree is generated as output.  The time complexity of matching search is: $T(n) = T(\sqrt{n}) + O(1)$, which leads to: $O(\log \log n)$.
 
 ### Pseudocode for `percentile_sort`
 
