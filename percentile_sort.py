@@ -4,7 +4,7 @@
 # Description: a divide and conquer sort algorithm that splits by square root percentiles instead of ranks
 # This generatates a Van Emde Boas like tree that is accessible with O(loglogn) as by-product
 #
-# Version: 1.1.6
+# Version: 1.2.0
 # Author: Tomio Kobayashi
 # Last Update: 2024/9/11
 
@@ -21,136 +21,109 @@ class p_sort:
             self.min = -np.inf
             self.max = np.inf
             self.children = []
-            self.value1 = None
-            self.value2 = None
-
-            self.left = None
-            self.right = None
-            self.top = None
-            self.last = None
+            
+            self.pos1 = -1
+            self.pos2 = -1
+            self.sorted_list = None
 
         def search(self, v, return_node=False):
             return self.searchme(v, self, return_node)
-
+        
         def searchme(self, v, bb, return_node=False):
-            if bb.value1 is not None:
-                if v == bb.value1 or v == bb.value2:
-                    return True if not return_node else bb
-                else:
-                    return False if not return_node else None
             if bb.len == -1:
-                return False
+                if v == bb.min:
+                    return bb.pos1 if not return_node else bb
+                elif v == bb.max:
+                    return bb.pos2 if not return_node else bb
+                else:
+                    return -1 if not return_node else None
             num_buckets = max(2, int(math.sqrt(bb.len))) 
             ind = min(num_buckets - 1, int((v - bb.min) / (bb.max - bb.min) * num_buckets))
             if  ind < 0 or ind > len(bb.children)-1:
-                return False if not return_node else None
+                return -1 if not return_node else None
             else:
                 return self.searchme(v, bb.children[ind], return_node)
-
+                    
         def link(self, sorted_vector):
-            prev = None
+            prev = np.inf
             for i, v in enumerate(sorted_vector):
-                if i == 0:
-                    prev = self.search(sorted_vector[i], return_node=True)
-                    self.top = prev
-                else:
-                    nex_val = sorted_vector[i]
-                    if sorted_vector[i-1] == sorted_vector[i]:
-                        continue
-                    nex = bbb.search(sorted_vector[i], return_node=True)
-                    if nex == prev:
-                        continue
-                    prev.right = nex
-                    nex.left = prev
-                    self.last = nex
-                    prev = nex
-
+                if prev != sorted_vector[i]:
+                    bb = self.search(sorted_vector[i], return_node=True)
+                    if sorted_vector[i] == bb.min:
+                        bb.pos1 = i
+                    elif sorted_vector[i] == bb.max:
+                        bb.pos2 = i
+                    prev = sorted_vector[i]
+            self.sorted_list = sorted_vector
+                
         def search_from(self, s):
-            vals = []
-            pos = self.last
-            while pos:
-                if pos.value1 and pos.value1 >= s:
-                    vals.append(pos.value1)
-                else:
-                    break
-                if pos.value2 and pos.value2 >= s:
-                    vals.append(pos.value2)
-                pos = pos.left
-            vals.reverse()
-            return vals
-
-
-        def search_to(self, s):
-            vals = []
-            pos = self.top
-            while pos:
-                if pos.value1 and pos.value1 <= s:
-                    vals.append(pos.value1)
-                else:
-                    break
-                if pos.value2 and pos.value2 <= s:
-                    vals.append(pos.value2)
-                pos = pos.right
-            return vals
-
+            suc = self.succ(s)
+            if suc == -1:
+                return []
+            return self.sorted_list[suc:]
+        
+        def search_to(self, f):
+            pre = self.prec(f)
+            if pre == -1:
+                return []
+            return self.sorted_list[:pre+1]
+        
         def search_range(self, s, f):
-            vals = []
-            pos = self.searchme_range(self, s, f, vals)
-            if not pos:
-                return vals
-            pos = pos.right
-            while pos:
-                if pos.value1 and pos.value1 <= f:
-                    vals.append(pos.value1)
+            suc = self.succ(s)
+            pre = self.prec(f)
+            if pre < suc or suc == -1 or pre == -1:
+                return []
+            return self.sorted_list[suc:pre+1]
+            
+
+        def succ(self, s):
+            return self.succme(self, s)
+            
+        def succme(self, bb, s):
+            if bb.len == -1:
+                if s <= bb.min:
+                    return bb.pos1
+                elif s <= bb.max:
+                    return bb.pos2
                 else:
-                    break
-                if pos.value2 and pos.value2 <= f:
-                    vals.append(pos.value2)
-                pos = pos.right
-            return vals
-
-    #     def searchme_range(self, bb, s, f, vals):
-    #         if bb.value1 is not None:
-    #             if bb.value1 >= s and bb.value1 <= f:
-    #                 vals.append(bb.value1)
-    #                 if bb.value2 is not None and bb.value2 >= s and bb.value2 <= f:
-    #                     vals.append(bb.value2)
-    #                 return bb
-    #         else:
-    #             if s > bb.max or f < bb.min:
-    #                 return None
-    #             else:
-    #                 for b in bb.children:
-    #                     pos = self.searchme_range(b, s, f, vals)
-    #                     if vals:
-    #                         return pos
-
-        def searchme_range(self, bb, s, f, vals):
-            if bb.value1 is not None:
-                if bb.value1 >= s and bb.value1 <= f:
-                    vals.append(bb.value1)
-                    if bb.value2 is not None and bb.value2 >= s and bb.value2 <= f:
-                        vals.append(bb.value2)
-                    return bb
+                    return -1
             else: 
-                if bb.len == -1 or not bb.children:
-                    return None
                 num_buckets = max(2, int(math.sqrt(bb.len))) 
                 ind = min(num_buckets - 1, int((s - bb.min) / (bb.max - bb.min) * num_buckets))
                 if ind > len(bb.children)-1:
-                    return None
+                    return -1
                 for i in range(max(0, ind), len(bb.children), 1):
-                    pos = self.searchme_range(bb.children[i], s, f, vals)
-                    if pos:
+                    pos = self.succme(bb.children[i], s)
+                    if pos > -1:
                         return pos
-                return None
+                return -1
 
-    
+        def prec(self, f):
+            return self.precme(self, f)
+            
+        def precme(self, bb, s):
+            if bb.len == -1:
+                if s >= bb.max:
+                    return bb.pos2
+                elif s >= bb.min:
+                    return bb.pos1
+                else:
+                    return -1
+            else: 
+                num_buckets = max(2, int(math.sqrt(bb.len))) 
+                ind = min(num_buckets - 1, int((s - bb.min) / (bb.max - bb.min) * num_buckets))
+                for i in range(min(len(bb.children)-1, ind), -1, -1):
+                    pos = self.precme(bb.children[i], s)
+                    if pos > -1:
+                        return pos
+                return -1
+            
+            
     def percentile_sort(arr, bb=None, link=False):
         
         if len(arr) <= 1:
             if bb is not None and len(arr) == 1:
-                bb.value1 = arr[0]
+                bb.min = arr[0]
             return arr
         elif len(arr) == 2:
             if arr[0]>arr[1]:
@@ -158,19 +131,17 @@ class p_sort:
 
             if bb is not None:
                 if arr[0] == arr[1]:
-                    bb.value1 = arr[0]
+                    bb.min = arr[0]
                 else:
-                    bb.value1 = arr[0]
-                    bb.value2 = arr[1]
+                    bb.min = arr[0]
+                    bb.max = arr[1]
             return arr
-
-
 
         # Find the min and max
         min_val, max_val = min(arr), max(arr)
         if min_val == max_val:
             if bb is not None:
-                bb.value1 = min_val
+                bb.min = arr[0]
             return arr
 
         if bb is not None:
@@ -196,6 +167,6 @@ class p_sort:
                 sorted_buckets += p_sort.percentile_sort(bucket, bb.children[-1])
 
         if bb is not None and link:
-            bb.link(sorted_buckets)
+            bb.link(sorted_buckets[0:])
 
         return sorted_buckets
