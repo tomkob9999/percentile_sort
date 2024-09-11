@@ -4,7 +4,7 @@
 # Description: a divide and conquer sort algorithm that splits by square root percentiles instead of ranks
 # This generatates a Van Emde Boas like tree that is accessible with O(loglogn) as by-product
 #
-# Version: 1.1.1
+# Version: 1.1.2
 # Author: Tomio Kobayashi
 # Last Update: 2024/9/11
 
@@ -91,6 +91,8 @@ class btre:
     def search_range(self, s, f):
         vals = []
         pos = self.searchme_range(self, s, f, vals)
+        if not pos:
+            return vals
         pos = pos.right
         while pos:
             if pos.value1 and pos.value1 <= f:
@@ -175,3 +177,33 @@ def percentile_sort(arr, bb=None, link=False):
         bb.link(sorted_buckets)
         
     return sorted_buckets
+
+
+# Example usage
+n = 10000  # Size of the vector
+vector = np.random.randint(1, 101, size=n)  # Generate a random vector of integers between 1 and 100
+# vector = np.random.random(size=n) * n
+# n = 100000  # Size of the vector
+# vector = np.random.randint(1, n, size=n)  # Generate a random vector of integers between 1 and 100
+# n = 500000
+# vector = np.random.random(size=n) * n
+
+print("Original vector:", vector[:50])
+
+
+# # Perform the recursive sort
+import time
+print("percentile_sort")
+start_time = time.time()
+# sorted_vector = percentile_sort(vector.tolist())
+bbb = btre()
+sorted_vector = percentile_sort(vector.tolist(), bbb, link=True)
+air_time = time.time() - start_time
+print(f"Execution Time: {air_time:.6f} seconds")
+
+
+print("Sorted vector:")
+print("Percentile sorted vector:")
+print(sorted_vector[:50])
+# print(sorted_vector)
+print("len(sorted_vector)", len(sorted_vector))
