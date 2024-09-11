@@ -56,4 +56,5 @@ percentile_sort(input_array):
 
   return sorted_buckets
 ```
-value does not go out of the original original range of min and max.  The output is functional for only integers as the splitting ends when it is lower than 1.
+
+Range search functions have been added.
