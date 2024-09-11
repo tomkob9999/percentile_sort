@@ -4,7 +4,7 @@
 # Description: a divide and conquer sort algorithm that splits by square root percentiles instead of ranks
 # This generatates a Van Emde Boas like tree that is accessible with O(loglogn) as by-product
 #
-# Version: 1.1.4
+# Version: 1.1.5
 # Author: Tomio Kobayashi
 # Last Update: 2024/9/11
 
@@ -135,7 +135,8 @@ class btre:
             ind = min(num_buckets - 1, int((s - bb.min) / (bb.max - bb.min) * num_buckets))
             if ind > len(bb.children)-1:
                 return None
-            for i in range(0, len(bb.children), 1):
+#             for i in range(0, len(bb.children), 1):
+            for i in range(max(0, ind), len(bb.children), 1):
                 pos = self.searchme_range(bb.children[i], s, f, vals)
                 if pos:
                     return pos
