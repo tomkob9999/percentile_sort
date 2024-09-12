@@ -1,10 +1,10 @@
 #
-# percentile_sort
+# p_sort
 #
 # Description: a divide and conquer sort algorithm that splits by square root percentiles instead of ranks
-# This generatates a Van Emde Boas like tree that is accessible with O(loglogn) as by-product
+# This optionally generatates a Van Emde Boas like tree that is accessible with O(loglogn) as by-product
 #
-# Version: 1.2.1
+# Version: 1.2.2
 # Author: Tomio Kobayashi
 # Last Update: 2024/9/11
 
@@ -24,13 +24,15 @@ class p_sort:
             
             self.pos1 = -1
             self.pos2 = -1
-            self.sorted_list = None
+            self.sorted_set = None
 
         def search(self, v, return_node=False):
             return self.searchme(v, self, return_node)
         
         def searchme(self, v, bb, return_node=False):
             if bb.len == -1:
+                return -1 if not return_node else None
+            if bb.len == 0:
                 if v == bb.min:
                     return bb.pos1 if not return_node else bb
                 elif v == bb.max:
@@ -54,26 +56,26 @@ class p_sort:
                     elif sorted_vector[i] == bb.max:
                         bb.pos2 = i
                     prev = sorted_vector[i]
-            self.sorted_list = sorted_vector
+            self.sorted_set = sorted_vector
                 
         def search_from(self, s):
             suc = self.succ(s)
             if suc == -1:
                 return []
-            return self.sorted_list[suc:]
+            return self.sorted_set[suc:]
         
         def search_to(self, f):
             pre = self.prec(f)
             if pre == -1:
                 return []
-            return self.sorted_list[:pre+1]
+            return self.sorted_set[:pre+1]
         
         def search_range(self, s, f):
             suc = self.succ(s)
             pre = self.prec(f)
             if pre < suc or suc == -1 or pre == -1:
                 return []
-            return self.sorted_list[suc:pre+1]
+            return self.sorted_set[suc:pre+1]
             
 
         def succ(self, s):
@@ -81,6 +83,8 @@ class p_sort:
             
         def succme(self, bb, s):
             if bb.len == -1:
+                    return -1                
+            if bb.len == 0:
                 if s <= bb.min:
                     return bb.pos1
                 elif s <= bb.max:
@@ -103,6 +107,8 @@ class p_sort:
             
         def precme(self, bb, s):
             if bb.len == -1:
+                    return -1                
+            if bb.len == 0:
                 if s >= bb.max:
                     return bb.pos2
                 elif s >= bb.min:
@@ -119,7 +125,7 @@ class p_sort:
                 return -1
             
         def update(self, inserts=[], deletes=[]):
-            c = self.sorted_list[0:]
+            c = self.sorted_set[0:]
             for d in deletes:
                 c.remove(d)
             for i in inserts:
@@ -138,6 +144,7 @@ class p_sort:
         if len(arr) <= 1:
             if bb is not None and len(arr) == 1:
                 bb.min = arr[0]
+                bb.len = 0
             return arr
         elif len(arr) == 2:
             if arr[0]>arr[1]:
@@ -149,6 +156,7 @@ class p_sort:
                 else:
                     bb.min = arr[0]
                     bb.max = arr[1]
+            bb.len = 0
             return arr
 
         # Find the min and max
@@ -156,6 +164,7 @@ class p_sort:
         if min_val == max_val:
             if bb is not None:
                 bb.min = arr[0]
+                bb.len = 0
             return arr
 
         if bb is not None:
