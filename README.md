@@ -1,10 +1,10 @@
 # p_sort
 
-This seems faster than other nlogn sorting algorithms.  Seems to outperform more as the data size grows and more duplicate elements exist
+This algorithm seems faster than other nlogn sorting algorithms.  It seems to outperform more as the data size grows and more duplicate elements exist
 
-The time complexity seems to be: $T(n) = \sqrt{n} \cdot T(\sqrt{n}) + O(n) + O(\sqrt{n})$, which would lead to: $O(n \log \log n)$.
+The time complexity seems to be: $T(n) = \sqrt{n} \cdot T(\sqrt{n}) + O(n)$, which would lead to: $O(n \log \log n)$.
 
-It divides into $\sqrt{n}$ pieces in $O(n)$ while merge sort takes $O(1)$ tquick sort takes $O(n)$ to both divide into 2.  It takes $O(\sqrt{n})$ to merge while merge sort takes $O(n)$ and quick sort takes $O(1)$.
+This algorithm divides into $\sqrt{n}$ pieces in $O(n)$ while Merge Sort takes $O(1)$ and Quick Sort takes $O(n)$ to both divide into 2.  This algorithm takes $O(\sqrt{n})$ to merge while Merge Sort takes $O(n)$ and Quick Sort takes $O(1)$.
 
 **Sample Test Result** (with vector of size 5,000,000 filled with random integers between 1 and 5,000,000)  
 - **Randomized Quick Sort Time**: 46.416540 seconds  
