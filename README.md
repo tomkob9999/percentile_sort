@@ -25,9 +25,9 @@ Integer Type
 | Percentile Sort         | 4                | 193389          | 20.68              |
 | Randomized Quick Sort   | 41               | 199911          | 102.60             |
 
-As by-product,  a static van-Edme-Boas-like tree is generated as output.  The time complexity of matching search is: $T(n) = T(\sqrt{n}) + O(1)$, which leads to: $O(\log \log n)$.
+As by-product,  a static van-Edme-Boas-like tree is generated as output.  The time complexity of matching search is: $T(n) = T(\sqrt{n}) + O(1)$, which leads to: $O(\log \log n)$.  It has also range search and update (it basically regenarates the array and tree, so the time complexity is the same as sorting..
 
-### Pseudocode for `percentile_sort`
+### Pseudocode for `p_sort`
 
 ```pseudo
 percentile_sort(input_array):
@@ -57,4 +57,4 @@ percentile_sort(input_array):
   return sorted_buckets
 ```
 
-Range search functions have been added.
+
