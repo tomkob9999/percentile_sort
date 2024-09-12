@@ -1,4 +1,4 @@
-# percentile_sort
+# p_sort
 
 This seems faster than other nlogn sorting algorithms.  Seems to outperform more as the data size grows and more duplicate elements exist
 
@@ -6,7 +6,7 @@ The time complexity seems to be: $T(n) = \sqrt{n} \cdot T(\sqrt{n}) + O(n)$, whi
 
 **Sample Test Result** (with vector of size 5,000,000 filled with random integers between 1 and 5,000,000)  
 - **Randomized Quick Sort Time**: 46.416540 seconds  
-- **Percentile Sort Time**: 19.905263 seconds  
+- **P-Sort Time**: 19.905263 seconds  
 - **Do-Nothing Loop Time**: 0.908326 seconds
 - On a side note, while this test data contains a small portion of duplicates, percentile_sort shows tendency to be faster as duplicates increase.
 
@@ -16,16 +16,16 @@ Sample Test Statistics with another input data of size 1,000,000.  The time comp
 Float type
 | Sort Type              | Recursion Depth | Number of calls | Average Input Size |
 |------------------------|-----------------|-----------------|--------------------|
-| Percentile Sort         | 10               | 1105716          | 5.46              |
+| P Sort         | 10               | 1105716          | 5.46              |
 | Randomized Quick Sort   | 51              | 1333631          | 18.99             |
 
 Integer Type
 | Sort Type              | Recursion Depth | Number of calls | Average Input Size |
 |------------------------|-----------------|-----------------|--------------------|
-| Percentile Sort         | 4                | 193389          | 20.68              |
+| P Sort         | 4                | 193389          | 20.68              |
 | Randomized Quick Sort   | 41               | 199911          | 102.60             |
 
-As by-product,  a static van-Edme-Boas-like tree is generated as output.  The time complexity of matching search is: $T(n) = T(\sqrt{n}) + O(1)$, which leads to: $O(\log \log n)$.  It has also range search and update (it basically regenarates the array and tree, so the time complexity is the same as sorting..
+As by-product,  a static van-Edme-Boas-like tree is generated as output.  The time complexity of matching search is: $T(n) = T(\sqrt{n}) + O(1)$, which leads to: $O(\log \log n)$.  It has also range search and update (it basically re-sort and regenarates the outputs, so the time complexity is the same as sorting.
 
 ### Pseudocode for `p_sort`
 
