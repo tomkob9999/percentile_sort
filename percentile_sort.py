@@ -4,7 +4,7 @@
 # Description: a divide and conquer sort algorithm that splits by square root percentiles instead of ranks
 # This optionally generatates a Van Emde Boas like tree that is accessible with O(loglogn) as by-product
 #
-# Version: 1.2.2
+# Version: 1.2.4
 # Author: Tomio Kobayashi
 # Last Update: 2024/9/11
 
@@ -118,6 +118,8 @@ class p_sort:
             else: 
                 num_buckets = max(2, int(math.sqrt(bb.len))) 
                 ind = min(num_buckets - 1, int((s - bb.min) / (bb.max - bb.min) * num_buckets))
+                if ind < 0:
+                    return -1
                 for i in range(min(len(bb.children)-1, ind), -1, -1):
                     pos = self.precme(bb.children[i], s)
                     if pos > -1:
@@ -132,7 +134,7 @@ class p_sort:
                 c.append(i)
             return p_sort.sort(c, create_btre=True, link=True)
             
-    def sort(arr, create_btre=True, link=False):
+    def sort(arr, create_btre=False, link=False):
         if create_btre:
             bb = p_sort.btre()
             return p_sort.percentile_sort(arr, bb, link), bb
@@ -156,7 +158,7 @@ class p_sort:
                 else:
                     bb.min = arr[0]
                     bb.max = arr[1]
-            bb.len = 0
+                bb.len = 0
             return arr
 
         # Find the min and max
