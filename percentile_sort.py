@@ -4,9 +4,9 @@
 # Description: a divide and conquer sort algorithm that splits by square root percentiles instead of ranks
 # This optionally generatates a Van Emde Boas like tree that is accessible with O(loglogn) as by-product
 #
-# Version: 1.2.4
+# Version: 1.2.5
 # Author: Tomio Kobayashi
-# Last Update: 2024/9/11
+# Last Update: 2024/9/13
 
 import numpy as np
 import math
@@ -14,6 +14,8 @@ import math
 # # Function to find the minimum and maximum of a vector
 # Recursive function to split the array into vectors and merge them
 class p_sort:
+    
+    ROOT_POWER = 1.3 # n^(1/1.3)seems faster than n^(1/2)(=square root)
     
     class btre:
         def __init__(self):
@@ -39,7 +41,8 @@ class p_sort:
                     return bb.pos2 if not return_node else bb
                 else:
                     return -1 if not return_node else None
-            num_buckets = max(2, int(math.sqrt(bb.len))) 
+#             num_buckets = max(2, int(math.sqrt(bb.len))) 
+            num_buckets = max(2, int(bb.len**(1/p_sort.ROOT_POWER)))
             ind = min(num_buckets - 1, int((v - bb.min) / (bb.max - bb.min) * num_buckets))
             if  ind < 0 or ind > len(bb.children)-1:
                 return -1 if not return_node else None
@@ -92,7 +95,8 @@ class p_sort:
                 else:
                     return -1
             else: 
-                num_buckets = max(2, int(math.sqrt(bb.len))) 
+#                 num_buckets = max(2, int(math.sqrt(bb.len))) 
+                num_buckets = max(2, int(bb.len**(1/p_sort.ROOT_POWER)))
                 ind = min(num_buckets - 1, int((s - bb.min) / (bb.max - bb.min) * num_buckets))
                 if ind > len(bb.children)-1:
                     return -1
@@ -116,7 +120,8 @@ class p_sort:
                 else:
                     return -1
             else: 
-                num_buckets = max(2, int(math.sqrt(bb.len))) 
+#                 num_buckets = max(2, int(math.sqrt(bb.len))) 
+                num_buckets = max(2, int(bb.len**(1/p_sort.ROOT_POWER)))
                 ind = min(num_buckets - 1, int((s - bb.min) / (bb.max - bb.min) * num_buckets))
                 if ind < 0:
                     return -1
@@ -174,7 +179,8 @@ class p_sort:
             bb.min = min_val
             bb.max = max_val
 
-        num_buckets = max(2, int(math.sqrt(len(arr))))  # Using square_root(n) as the number of sub-vectors
+#         num_buckets = max(2, int(math.sqrt(len(arr))))  # Using square_root(n) as the number of sub-vectors
+        num_buckets = max(2, int(len(arr)**(1/p_sort.ROOT_POWER)))
         buckets = [[] for _ in range(num_buckets)]
 
         # Insert elements into corresponding buckets based on percentile
