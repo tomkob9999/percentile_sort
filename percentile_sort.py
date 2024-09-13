@@ -4,9 +4,9 @@
 # Description: a divide and conquer sort algorithm that splits by square root percentiles instead of ranks
 # This optionally generatates a Van Emde Boas like tree that is accessible with O(loglogn) as by-product
 #
-# Version: 1.2.6
+# Version: 1.2.7
 # Author: Tomio Kobayashi
-# Last Update: 2024/9/13
+# Last Update: 2024/9/14
 
 import numpy as np
 import math
@@ -15,7 +15,8 @@ import math
 # Recursive function to split the array into vectors and merge them
 class p_sort:
     
-    ROOT_POWER = 1.25 # n^(1/1.25)seems faster than n^(1/2)(=square root)
+    ROOT_POWER = 1.25 # n^(1/1.25) seems faster than n^(1/2)(=square root)
+    deepest = 0
     
     class btre:
         def __init__(self):
@@ -139,14 +140,23 @@ class p_sort:
                 c.append(i)
             return p_sort.sort(c, create_btre=True, link=True)
             
-    def sort(arr, create_btre=False, link=False):
+    def sort(arr, create_btre=False, link=False, find_depth=True):
+        depth = -1
+        if find_depth:
+            depth = 0
+            p_sort.deepest = 0
+            
         if create_btre:
             bb = p_sort.btre()
-            return p_sort.percentile_sort(arr, bb, link), bb
+            return p_sort.percentile_sort(arr, bb, link, depth=depth), bb
         else:
-            return p_sort.percentile_sort(arr, link=link)
+            return p_sort.percentile_sort(arr, link=link, depth=depth)
         
-    def percentile_sort(arr, bb=None, link=False):
+    def percentile_sort(arr, bb=None, link=False, depth=-1):
+        if depth > -1:
+            depth += 1
+            if depth > p_sort.deepest:
+                p_sort.deepest = depth
         
         if len(arr) <= 1:
             if bb is not None and len(arr) == 1:
@@ -192,10 +202,10 @@ class p_sort:
         sorted_buckets = []
         for bucket in buckets:
             if bb is None :
-                sorted_buckets += p_sort.percentile_sort(bucket)
+                sorted_buckets += p_sort.percentile_sort(bucket, depth=depth)
             else:
                 bb.children.append(p_sort.btre())
-                sorted_buckets += p_sort.percentile_sort(bucket, bb.children[-1])
+                sorted_buckets += p_sort.percentile_sort(bucket, bb.children[-1], depth=depth)
 
         if bb is not None and link:
             bb.link(list(set(sorted_buckets)))
