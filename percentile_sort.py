@@ -4,7 +4,7 @@
 # Description: a divide and conquer sort algorithm that splits by square root percentiles instead of ranks
 # This optionally generatates a Van Emde Boas like tree that is accessible with O(loglogn) as by-product
 #
-# Version: 1.2.5
+# Version: 1.2.6
 # Author: Tomio Kobayashi
 # Last Update: 2024/9/13
 
@@ -15,7 +15,7 @@ import math
 # Recursive function to split the array into vectors and merge them
 class p_sort:
     
-    ROOT_POWER = 1.3 # n^(1/1.3)seems faster than n^(1/2)(=square root)
+    ROOT_POWER = 1.25 # n^(1/1.25)seems faster than n^(1/2)(=square root)
     
     class btre:
         def __init__(self):
