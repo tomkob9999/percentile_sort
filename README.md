@@ -57,5 +57,5 @@ percentile_sort(input_array):
   return sorted_buckets
 ```
 
-As by-product,  a static van-Edme-Boas-like tree is generated as output.  The time complexity of matching search is: $T(n) = T(\sqrt{n}) + O(1)$, which leads to: $O(\log \log n)$.  It has also range search and update (it basically re-sorts and regenarates the outputs, so the time complexity is the same as sorting.
+As by-product,  a m-ary tree is generated as output.  The time complexity of matching search seems: $T(n) = T(\sqrt{n}) + O(1)$, which would lead to: $O(\log \log n)$.  It has also range search and update (but the current implementation only re-sorts and regenarates the outputs for updates, so the time complexity is the same as sorting.  O(1) updates seem possible but no plan of implementation as of now.
 
