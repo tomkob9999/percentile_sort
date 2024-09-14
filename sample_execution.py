@@ -53,3 +53,39 @@ new, bb3 = bb2.update([105])
 print("new", new)
 
 new, bb3 = bb3.update([], [101])
+
+
+#######
+# sample test data creation
+#
+
+# Create a vector of random integers between 1 and 1000
+# vector_size = 20000000
+# vector = np.random.randint(1, vector_size, size=vector_size)
+
+# vector_size = 1000000
+# vector = np.random.randint(1, vector_size, size=vector_size)
+
+# Test with skewed data
+# scale = 10000.0  # The scale parameter (1/λ). Lower values increase the skewness.
+# vector = np.random.exponential(scale, n)
+# mean = 1000
+# std_dev = 1
+# vector = np.random.normal(mean, std_dev, n)
+# shape, scale = 0.5, 1.0  # Shape controls the skewness; scale adjusts the spread
+# vector = np.random.gamma(shape, scale, n)
+
+
+# Quick sort implementation used in testin
+
+def quick_sort(arr):
+    if len(arr) <= 1:
+        return arr
+    else:
+        pivot = random.choice(arr)
+        less = [x for x in arr if x < pivot]
+        equal = [x for x in arr if x == pivot]
+        greater = [x for x in arr if x > pivot]
+        return quick_sort(less) + equal + quick_sort(greater)
+
+
