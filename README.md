@@ -57,5 +57,5 @@ percentile_sort(input_array):
   return sorted_buckets
 ```
 
-As by-product,  a m-ary tree is generated as output.  The time complexity of matching search seems: $T(n) = T(\sqrt{n}) + O(1)$, which would lead to: $O(\log \log n)$.  It has also range search and update (but the current implementation only re-sorts and regenarates the outputs for updates, so the time complexity is the same as sorting.  $O(\log \log n)$ (search time with constant) updates seem possible but no plan of implementation as of now.
+As by-product,  a m-ary tree is generated as output.  The time complexity of matching search seems: $T(n) = T(\sqrt{n}) + O(1)$, which would lead to: $O(\log \log n)$.  It has also range search and update (but the current implementation only re-sorts and regenarates the outputs for updates, so the time complexity is the same as sorting.  Updates with $O(\log \log n)$ time (search time with constant) seem possible, but no plan of implementation as of now.
 
