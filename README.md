@@ -38,7 +38,7 @@ percentile_sort(input_array):
      if input_array[1] < input_array[0] then
         input_array[0], input_array[1] = input_array[1], input_array[0]
 
-  min_value = min(input_array)  -- O(1)
+  min_value = min(input_array)  -- O(1), reason for being O(1) is min, max, len can be obtained curing loop for each bucket at line 49-51 and pass as parameters at 54, if written explicitly
   max_value = max(input_array)  -- O(1)
 
   if min_value == max_value then
