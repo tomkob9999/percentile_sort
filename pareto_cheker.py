@@ -26,9 +26,9 @@ def pick_20_percent_magnitude_based(data):
 def check_pareto(pareto_data):
     pick_size = 0
     data = []
-    if len(pareto_data) > 10000:
-        pick_size = 10000
-        data = np.random.choice(pareto_data, pick_size, replace=False)
+    if len(pareto_data) > 50000:
+        pick_size = 50000
+        data = np.random.choice(pareto_data, pick_size, replace=True)
     elif len(pareto_data) > 500:
         data = pareto_data
     else:
@@ -49,8 +49,3 @@ def check_pareto(pareto_data):
         print("This is in Pareto")
         return True
 
-n_elements = 1111111
-shape_param = 2
-pareto_data = np.random.pareto(shape_param, n_elements)
-
-check_pareto(pareto_data)
