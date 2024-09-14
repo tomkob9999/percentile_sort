@@ -153,7 +153,7 @@ class p_sort:
         if create_btre:
             bb = p_sort.btre()
             if linearize:
-                ret, ret2 = p_sort.percentile_sort(np.log(arr), bb=bb, link=link, depth=depth, idx_vector=[], linearize=linearize)
+                ret, ret2 = p_sort.percentile_sort(np.log(arr) if min(arr) > 0 else np.log(np.array(arr) - min(arr) + 1), bb=bb, link=link, depth=depth, idx_vector=[], linearize=linearize)
 #                 print("ret", ret[:20])
 #                 print("ret2", ret2[:20])
                 return np.array(arr)[ret2].tolist(), bb
@@ -161,7 +161,7 @@ class p_sort:
                 return p_sort.percentile_sort(arr, bb=bb, link=link, depth=depth, idx_vector=[], linearize=linearize), bb
         else:
             if linearize:
-                ret, ret2 = p_sort.percentile_sort(np.log(arr), bb=None, link=link, depth=depth, idx_vector=[], linearize=linearize)
+                ret, ret2 = p_sort.percentile_sort(np.log(np.array(arr) - min(arr) + 1), bb=None, link=link, depth=depth, idx_vector=[], linearize=linearize)
 #                 print("ret", ret[:20])
 #                 print("ret2", ret2[:20])
                 return np.array(arr)[ret2].tolist()
