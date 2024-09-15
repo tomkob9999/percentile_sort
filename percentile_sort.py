@@ -4,9 +4,9 @@
 # Description: a divide and conquer sort algorithm that splits by square root percentiles instead of ranks
 # This optionally generatates a Van Emde Boas like tree that is accessible with O(loglogn) as by-product
 #
-# Version: 1.2.7
+# Version: 1.2.8
 # Author: Tomio Kobayashi
-# Last Update: 2024/9/14
+# Last Update: 2024/9/15
 
 import numpy as np
 import math
@@ -42,7 +42,6 @@ class p_sort:
                     return bb.pos2 if not return_node else bb
                 else:
                     return -1 if not return_node else None
-#             num_buckets = max(2, int(math.sqrt(bb.len))) 
             num_buckets = max(2, int(bb.len**(1/p_sort.ROOT_POWER)))
             ind = min(num_buckets - 1, int((v - bb.min) / (bb.max - bb.min) * num_buckets))
             if  ind < 0 or ind > len(bb.children)-1:
@@ -96,7 +95,6 @@ class p_sort:
                 else:
                     return -1
             else: 
-#                 num_buckets = max(2, int(math.sqrt(bb.len))) 
                 num_buckets = max(2, int(bb.len**(1/p_sort.ROOT_POWER)))
                 ind = min(num_buckets - 1, int((s - bb.min) / (bb.max - bb.min) * num_buckets))
                 if ind > len(bb.children)-1:
@@ -121,7 +119,6 @@ class p_sort:
                 else:
                     return -1
             else: 
-#                 num_buckets = max(2, int(math.sqrt(bb.len))) 
                 num_buckets = max(2, int(bb.len**(1/p_sort.ROOT_POWER)))
                 ind = min(num_buckets - 1, int((s - bb.min) / (bb.max - bb.min) * num_buckets))
                 if ind < 0:
@@ -142,9 +139,9 @@ class p_sort:
             
     def sort(arr, create_btre=False, link=False, find_depth=True):
         depth = -1
+        p_sort.deepest = 0
         if find_depth:
             depth = 0
-            p_sort.deepest = 0
             
         if create_btre:
             bb = p_sort.btre()
@@ -189,7 +186,6 @@ class p_sort:
             bb.min = min_val
             bb.max = max_val
 
-#         num_buckets = max(2, int(math.sqrt(len(arr))))  # Using square_root(n) as the number of sub-vectors
         num_buckets = max(2, int(len(arr)**(1/p_sort.ROOT_POWER)))
         buckets = [[] for _ in range(num_buckets)]
 
