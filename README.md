@@ -12,7 +12,7 @@ This algorithm divides into $\sqrt{n}$ pieces in $O(n)$ while Merge Sort takes $
 - **Do-Nothing Loop Time**: 0.908326 seconds
 - On a side note, while this test data contains a small portion of duplicates, percentile_sort shows tendency to be faster as duplicates increase.
 
-NOTE: For very skewed data that is recursively very concentrated like Pareto distribution, the conversion could be slow.  To counter-act this, such distribution can be detected in O(1) time (sampled, pareto_cheker.py) and then it could preprocess the data by logging the input data to linearize the shape and then exponentiate back later, or keep the index during sorting and use it at the end, which is in total O(n), as sampled in pareto_cheker.py as well.
+NOTE: For very skewed data that is recursively very concentrated like Pareto distribution, the conversion could be slow.  To counter-act this, such distribution can be detected in O(1) time (sampled, pareto_cheker.py) and then it could preprocess the data by logging the input data to linearize the shape and then exponentiate back later, or keep the index during sorting and use it at the end, which is in total O(n), as sampled in percentile_sort_linearize_preprocess_version.py.
 
 
 Sample Test Statistics with another input data of size 1,000,000.  The time complexity was equivalent of above.
