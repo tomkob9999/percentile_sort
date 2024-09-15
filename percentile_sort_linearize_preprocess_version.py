@@ -46,7 +46,6 @@ class p_sort:
                     return bb.pos2 if not return_node else bb
                 else:
                     return -1 if not return_node else None
-#             num_buckets = max(2, int(math.sqrt(bb.len))) 
             num_buckets = max(2, int(bb.len**(1/p_sort.ROOT_POWER)))
             ind = min(num_buckets - 1, int((v - bb.min) / (bb.max - bb.min) * num_buckets))
             if  ind < 0 or ind > len(bb.children)-1:
@@ -100,7 +99,6 @@ class p_sort:
                 else:
                     return -1
             else: 
-#                 num_buckets = max(2, int(math.sqrt(bb.len))) 
                 num_buckets = max(2, int(bb.len**(1/p_sort.ROOT_POWER)))
                 ind = min(num_buckets - 1, int((s - bb.min) / (bb.max - bb.min) * num_buckets))
                 if ind > len(bb.children)-1:
@@ -125,7 +123,6 @@ class p_sort:
                 else:
                     return -1
             else: 
-#                 num_buckets = max(2, int(math.sqrt(bb.len))) 
                 num_buckets = max(2, int(bb.len**(1/p_sort.ROOT_POWER)))
                 ind = min(num_buckets - 1, int((s - bb.min) / (bb.max - bb.min) * num_buckets))
                 if ind < 0:
@@ -154,22 +151,17 @@ class p_sort:
             bb = p_sort.btre()
             if linearize:
                 ret, ret2 = p_sort.percentile_sort(np.log(arr) if min(arr) > 0 else np.log(np.array(arr) - min(arr) + 1), bb=bb, link=link, depth=depth, idx_vector=[], linearize=linearize)
-#                 print("ret", ret[:20])
-#                 print("ret2", ret2[:20])
                 return np.array(arr)[ret2].tolist(), bb
             else:
                 return p_sort.percentile_sort(arr, bb=bb, link=link, depth=depth, idx_vector=[], linearize=linearize), bb
         else:
             if linearize:
-                ret, ret2 = p_sort.percentile_sort(np.log(np.array(arr) - min(arr) + 1), bb=None, link=link, depth=depth, idx_vector=[], linearize=linearize)
-#                 print("ret", ret[:20])
-#                 print("ret2", ret2[:20])
+                ret, ret2 = p_sort.percentile_sort(np.log(arr) if min(arr) > 0 else np.log(np.array(arr) - min(arr) + 1), bb=None, link=link, depth=depth, idx_vector=[], linearize=linearize)
                 return np.array(arr)[ret2].tolist()
             else:
                 return p_sort.percentile_sort(arr, bb=None, link=link, depth=depth, idx_vector=[], linearize=linearize)
         
     def percentile_sort(arr, bb=None, link=False, depth=-1, idx_vector=[], linearize=False):
-#         print("idx_vector", idx_vector)
         if depth > -1:
             depth += 1
             if depth > p_sort.deepest:
@@ -217,7 +209,6 @@ class p_sort:
             bb.min = min_val
             bb.max = max_val
 
-#         num_buckets = max(2, int(math.sqrt(len(arr))))  # Using square_root(n) as the number of sub-vectors
         num_buckets = max(2, int(len(arr)**(1/p_sort.ROOT_POWER)))
         buckets = [[] for _ in range(num_buckets)]
         if linearize:
@@ -225,7 +216,6 @@ class p_sort:
 
 
         # Insert elements into corresponding buckets based on percentile
-#         for value in arr:
         for i, value in enumerate(arr):
             # Calculate the bucket index based on the value's percentile between min and max
             b_idx = min(num_buckets - 1, int((value - min_val) / (max_val - min_val) * num_buckets))
@@ -247,7 +237,6 @@ class p_sort:
                     sorted_buckets += sorted_bucket
                     sorted_buckets_idx += sorted_bucket_idx
                 else:
-#                 sorted_buckets += p_sort.percentile_sort(bucket, depth=depth)
                     sorted_buckets += p_sort.percentile_sort(bucket, depth=depth)
             else:
                 bb.children.append(p_sort.btre())
