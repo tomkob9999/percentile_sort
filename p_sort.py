@@ -4,9 +4,9 @@
 # Description: a divide and conquer sort algorithm that splits by square root percentiles instead of ranks
 # This optionally generatates a Van Emde Boas like tree that is accessible with O(loglogn) as by-product
 #
-# Version: 1.2.8
+# Version: 1.2.9
 # Author: Tomio Kobayashi
-# Last Update: 2024/9/15
+# Last Update: 2024/9/17
 
 import numpy as np
 import math
@@ -137,7 +137,7 @@ class p_sort:
                 c.append(i)
             return p_sort.sort(c, create_btre=True, link=True)
             
-    def sort(arr, create_btre=False, link=False, find_depth=True):
+    def sort(arr, create_btre=False, find_depth=True):
         depth = -1
         p_sort.deepest = 0
         if find_depth:
@@ -145,11 +145,11 @@ class p_sort:
             
         if create_btre:
             bb = p_sort.btre()
-            return p_sort.percentile_sort(arr, bb, link, depth=depth), bb
+            return p_sort.percentile_sort(arr, bb, depth=depth), bb
         else:
-            return p_sort.percentile_sort(arr, link=link, depth=depth)
+            return p_sort.percentile_sort(arr, depth=depth)
         
-    def percentile_sort(arr, bb=None, link=False, depth=-1):
+    def percentile_sort(arr, bb=None, depth=-1):
         if depth > -1:
             depth += 1
             if depth > p_sort.deepest:
@@ -203,7 +203,8 @@ class p_sort:
                 bb.children.append(p_sort.btre())
                 sorted_buckets += p_sort.percentile_sort(bucket, bb.children[-1], depth=depth)
 
-        if bb is not None and link:
+        if bb is not None:
             bb.link(list(set(sorted_buckets)))
 
         return sorted_buckets
+    

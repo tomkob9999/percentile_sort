@@ -141,27 +141,29 @@ class p_sort:
                 c.append(i)
             return p_sort.sort(c, create_btre=True, link=True)
             
-    def sort(arr, create_btre=False, link=False, find_depth=True, linearize=False):
+    def sort(arr, create_btre=False, find_depth=True, linearize=False):
         depth = -1
+        p_sort.deepest = 0
+        LOG_REP=1
         if find_depth:
             depth = 0
-            p_sort.deepest = 0
-            
         if create_btre:
             bb = p_sort.btre()
-            if linearize:
-                ret, ret2 = p_sort.percentile_sort(np.log(arr) if min(arr) > 0 else np.log(np.array(arr) - min(arr) + 1), bb=bb, link=link, depth=depth, idx_vector=[], linearize=linearize)
-                return np.array(arr)[ret2].tolist(), bb
-            else:
-                return p_sort.percentile_sort(arr, bb=bb, link=link, depth=depth, idx_vector=[], linearize=linearize), bb
         else:
-            if linearize:
-                ret, ret2 = p_sort.percentile_sort(np.log(arr) if min(arr) > 0 else np.log(np.array(arr) - min(arr) + 1), bb=None, link=link, depth=depth, idx_vector=[], linearize=linearize)
-                return np.array(arr)[ret2].tolist()
-            else:
-                return p_sort.percentile_sort(arr, bb=None, link=link, depth=depth, idx_vector=[], linearize=linearize)
+            bb = None
+        if linearize:
+#                 ret, ret2 = p_sort.percentile_sort(np.log(arr) if min(arr) > 0 else np.log(np.array(arr) - min(arr) + 1), bb=bb, link=link, depth=depth, idx_vector=[], linearize=linearize)
+            dat = arr
+            for _ in range(LOG_REP):
+                dat = np.log(np.array(arr) - min(arr) + 1)
+            ret, ret2 = p_sort.percentile_sort(dat, bb=bb, depth=depth, idx_vector=[], linearize=linearize)
+
+            return np.array(arr)[ret2].tolist(), bb
+        else:
+            return p_sort.percentile_sort(arr, bb=bb, depth=depth, idx_vector=[], linearize=linearize), bb
+            
         
-    def percentile_sort(arr, bb=None, link=False, depth=-1, idx_vector=[], linearize=False):
+    def percentile_sort(arr, bb=None, depth=-1, idx_vector=[], linearize=False):
         if depth > -1:
             depth += 1
             if depth > p_sort.deepest:
@@ -247,7 +249,7 @@ class p_sort:
                 else:
                     sorted_buckets += p_sort.percentile_sort(bucket, bb.children[-1], depth=depth)
 
-        if bb is not None and link:
+        if bb is not None:
             bb.link(list(set(sorted_buckets)))
 
         if linearize:
