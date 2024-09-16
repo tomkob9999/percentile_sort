@@ -15,7 +15,7 @@ This algorithm divides into $\sqrt{n}$ pieces in $O(n)$ while Merge Sort takes $
 NOTE: For very skewed data that is recursively very concentrated like Pareto distribution, the conversion could be slow.  To counter-act this, such distribution can be detected in O(1) time (sampled, pareto_cheker.py) and then it could preprocess the data by logging the input data to linearize the shape and then exponentiate back later, or keep the index during sorting and use it at the end, which is in total O(n), as sampled in percentile_sort_linearize_preprocess_version.py, even though I have not found any performance degrade in the original version or any performance improvement in the log preprocessing version in any of very skewed data that I tested with yet.
 
 
-Sample Test Statistics with another input data of size 1,000,000.  The time complexity was equivalent of above.
+Sample Test Statistics with another input data of size 1,000,000.  The time complexity was equivalent of above. (The latest version which has adjusted root power 1.25 instead of 2 is slighter faster and depth of 7 or lower with the given input size even with very skewed distribution Pareto)
 
 Float type
 | Sort Type              | Recursion Depth | Number of calls | Average Input Size |
