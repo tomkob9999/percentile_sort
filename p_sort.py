@@ -7,9 +7,9 @@
 # linearize=True preprocess by take log of input data to avoid repeating concentration during recursive partionning.  btre also contains log() values
 # Latest non-linearization version is 1.3.2
 #
-# Version: 1.3.5
+# Version: 1.3.6
 # Author: Tomio Kobayashi
-# Last Update: 2024/9/17
+# Last Update: 2024/9/18
 
 import numpy as np
 import math
@@ -19,6 +19,7 @@ import math
 class p_sort:
     
     ROOT_POWER = 1.25 # n^(1/1.25) seems faster than n^(1/2)(=square root)
+    LOG_INIT = 500 # log straightens at abount 500
     deepest = 0
     
     class btre:
@@ -38,7 +39,7 @@ class p_sort:
 
         def search(self, v, return_node=False):
             if self.sorted_set_linear:
-                v = np.log(v - self.log_min + 1)
+                v = np.log(v - self.log_min + p_sort.LOG_INIT)
             return self.searchme(v, self, return_node)
         
         def searchme(self, v, bb, return_node=False):
@@ -80,7 +81,7 @@ class p_sort:
                 
         def search_from(self, s):
             if self.sorted_set_linear:
-                s = np.log(s - self.log_min + 1)
+                s = np.log(s - self.log_min + p_sort.LOG_INIT)
             suc = self.succ(s)
             if suc == -1:
                 return []
@@ -91,7 +92,7 @@ class p_sort:
         
         def search_to(self, f):
             if self.sorted_set_linear:
-                f = np.log(f - self.log_min + 1)
+                f = np.log(f - self.log_min + p_sort.LOG_INIT)
             pre = self.prec(f)
             if pre == -1:
                 return []
@@ -102,8 +103,8 @@ class p_sort:
         
         def search_range(self, s, f):
             if self.sorted_set_linear:
-                s = np.log(s - self.log_min + 1)
-                f = np.log(f - self.log_min + 1)
+                s = np.log(s - self.log_min + p_sort.LOG_INIT)
+                f = np.log(f - self.log_min + p_sort.LOG_INIT)
                 
             suc = self.succ(s)
             pre = self.prec(f)
@@ -189,7 +190,7 @@ class p_sort:
         if linearize:
             if create_btre:
                 bb.log_min = min(arr)
-            dat = np.log(np.array(arr) - min(arr) + 1)
+            dat = np.log(np.array(arr) - min(arr) + p_sort.LOG_INIT)
             ret, ret2 = p_sort.percentile_sort(dat, bb=bb, depth=depth, idx_vector=[], linearize=linearize)
             sorted_vector = np.array(arr)[ret2].tolist()
             if bb is not None:
@@ -298,3 +299,4 @@ class p_sort:
             return sorted_buckets, sorted_buckets_idx
         else:
             return sorted_buckets
+        
