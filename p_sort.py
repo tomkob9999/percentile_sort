@@ -216,8 +216,8 @@ class p_sort:
 
         num_buckets = max(2, int(len(arr)**(1/p_sort.ROOT_POWER)))
         buckets = [[] for _ in range(num_buckets)]
-        minmin = [[np.inf] for _ in range(num_buckets)]
-        maxmax = [[-np.inf] for _ in range(num_buckets)]
+#         minmin = [[np.inf] for _ in range(num_buckets)]
+#         maxmax = [[-np.inf] for _ in range(num_buckets)]
 
         # Insert elements into corresponding buckets based on percentile
         for value in arr:
@@ -236,4 +236,3 @@ class p_sort:
 #             bb.link(list(set(sorted_buckets)))
 
         return sorted_buckets
-    
