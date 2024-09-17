@@ -43,6 +43,7 @@ class p_sort:
                     return bb.pos2 if not return_node else bb
                 else:
                     return -1 if not return_node else None
+            
             num_buckets = max(2, int(bb.len**(1/p_sort.ROOT_POWER)))
             ind = min(num_buckets - 1, int((v - bb.min) / (bb.max - bb.min) * num_buckets))
             if  ind < 0 or ind > len(bb.children)-1:
@@ -63,6 +64,19 @@ class p_sort:
                     self.sorted_set.append(sorted_vector[i])
 #             self.sorted_set = sorted_vector
                 
+#         def link(self, sorted_vector):
+#             prev = np.inf
+#             for i, v in enumerate(sorted_vector):
+#                 if prev != sorted_vector[i]:
+#                     bb = self.search(sorted_vector[i], return_node=True)
+#                     if sorted_vector[i] == bb.min:
+#                         bb.pos1 = i
+#                     elif sorted_vector[i] == bb.max:
+#                         bb.pos2 = i
+#                     prev = sorted_vector[i]
+# #                     self.sorted_set.append(sorted_vector[i])
+#             self.sorted_set = sorted_vector
+
         def search_from(self, s):
             suc = self.succ(s)
             if suc == -1:
@@ -151,6 +165,14 @@ class p_sort:
             if bb is not None:
 #                 bb.link(list(set(sorted_vector)))
                 bb.link(sorted_vector)
+#                 bb.link(list(sorted_vector))
+#                 ll = []
+#                 prev = np.inf
+#                 for s in sorted_vector:
+#                     if s != prev:
+#                         ll.append(s)
+#                         prev = s
+#                 bb.link(ll)
             return sorted_vector, bb
         else:
             return p_sort.percentile_sort(arr, depth=depth)
