@@ -60,7 +60,31 @@ percentile_sort_time = time.time() - start_time
 print(f"P Sort Time: {percentile_sort_time:.6f} seconds")
 print("p_sort.deepest", p_sort.deepest)
 
+vector_size = 500000
+# vector_size = 100
+vector = np.random.randint(-(vector_size/2), vector_size, size=vector_size)
+# vector = np.random.random(size=vector_size) * vector_size + 1
+# shape_param = 1.1
+# vector = np.random.pareto(shape_param, vector_size)
 
+
+import time
+# start_time = time.time()
+# # v = np.log(vector)
+# sorted_dat = p_sort.sort(v)
+# # sorted_dat = np.exp(sorted_dat)
+# percentile_sort_time = time.time() - start_time
+# # print("sorted_dat", sorted_dat[:20])
+# print(f"P Sort Time with log: {percentile_sort_time:.6f} seconds")
+# print("p_sort.deepest", p_sort.deepest)
+
+start_time = time.time()
+# sorted_dat = p_sort.sort(vector.tolist(), create_btre=False)
+sorted_dat, bbb = p_sort.sort(vector.tolist(), create_btre=True, linearize=True)
+percentile_sort_time = time.time() - start_time
+print("sorted_dat", sorted_dat[:20])
+print(f"P Sort Time: {percentile_sort_time:.6f} seconds")
+print("p_sort.deepest", p_sort.deepest)
 
 
 vector_size = 1000000

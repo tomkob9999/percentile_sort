@@ -7,7 +7,7 @@
 # linearize=True preprocess by take log of input data to avoid repeating concentration during recursive partionning.  btre also contains log() values
 # Latest non-linearization version is 1.3.2
 #
-# Version: 1.3.4
+# Version: 1.3.5
 # Author: Tomio Kobayashi
 # Last Update: 2024/9/17
 
@@ -34,10 +34,11 @@ class p_sort:
             self.pos2 = -1
             self.sorted_set = []
             self.sorted_set_linear = []
+            self.log_min=np.inf
 
         def search(self, v, return_node=False):
             if self.sorted_set_linear:
-                v = np.log(v)
+                v = np.log(v - self.log_min + 1)
             return self.searchme(v, self, return_node)
         
         def searchme(self, v, bb, return_node=False):
@@ -79,7 +80,7 @@ class p_sort:
                 
         def search_from(self, s):
             if self.sorted_set_linear:
-                s = np.log(s)
+                s = np.log(s - self.log_min + 1)
             suc = self.succ(s)
             if suc == -1:
                 return []
@@ -90,7 +91,7 @@ class p_sort:
         
         def search_to(self, f):
             if self.sorted_set_linear:
-                f = np.log(f)
+                f = np.log(f - self.log_min + 1)
             pre = self.prec(f)
             if pre == -1:
                 return []
@@ -101,8 +102,8 @@ class p_sort:
         
         def search_range(self, s, f):
             if self.sorted_set_linear:
-                s = np.log(s)
-                f = np.log(f)
+                s = np.log(s - self.log_min + 1)
+                f = np.log(f - self.log_min + 1)
                 
             suc = self.succ(s)
             pre = self.prec(f)
@@ -179,7 +180,6 @@ class p_sort:
     def sort(arr, create_btre=False, find_depth=True, linearize=False):
         depth = -1
         p_sort.deepest = 0
-        LOG_REP=1
         if find_depth:
             depth = 0
         if create_btre:
@@ -187,22 +187,26 @@ class p_sort:
         else:
             bb = None
         if linearize:
-            dat = arr
-            for _ in range(LOG_REP):
-                dat = np.log(np.array(arr) - min(arr) + 1)
+            if create_btre:
+                bb.log_min = min(arr)
+            dat = np.log(np.array(arr) - min(arr) + 1)
             ret, ret2 = p_sort.percentile_sort(dat, bb=bb, depth=depth, idx_vector=[], linearize=linearize)
-            
             sorted_vector = np.array(arr)[ret2].tolist()
             if bb is not None:
                 bb.link(ret, sorted_vector)
 
-            return sorted_vector, bb
+            if create_btre:
+                return sorted_vector, bb
+            else:
+                return sorted_vector
         else:
             ret = p_sort.percentile_sort(arr, bb=bb, depth=depth, idx_vector=[], linearize=linearize)
             if bb is not None:
                 bb.link(ret)
-            return ret, bb
-            
+            if create_btre:
+                return ret, bb
+            else:
+                return ret
         
     def percentile_sort(arr, bb=None, depth=-1, idx_vector=[], linearize=False):
         if depth > -1:
