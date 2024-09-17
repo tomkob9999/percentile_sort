@@ -8,7 +8,7 @@
 # linearize=True preprocess by take log of input data to avoid repeating concentration during recursive partionning.  btre also contains log() values
 # 
 # Author: Tomio Kobayashi
-# Last Update: 2024/9/15
+# Last Update: 2024/9/17
 
 import numpy as np
 import math
@@ -31,7 +31,7 @@ class p_sort:
             
             self.pos1 = -1
             self.pos2 = -1
-            self.sorted_set = None
+            self.sorted_set = []
 
         def search(self, v, return_node=False):
             return self.searchme(v, self, return_node)
@@ -59,11 +59,14 @@ class p_sort:
                 if prev != sorted_vector[i]:
                     bb = self.search(sorted_vector[i], return_node=True)
                     if sorted_vector[i] == bb.min:
-                        bb.pos1 = i
+#                         bb.pos1 = i
+                        bb.pos1 = len(self.sorted_set)
                     elif sorted_vector[i] == bb.max:
-                        bb.pos2 = i
+#                         bb.pos2 = i
+                        bb.pos2 = len(self.sorted_set)
                     prev = sorted_vector[i]
-            self.sorted_set = sorted_vector
+                    self.sorted_set.append(sorted_vector[i])
+#             self.sorted_set = sorted_vector
                 
         def search_from(self, s):
             suc = self.succ(s)
@@ -249,8 +252,8 @@ class p_sort:
                 else:
                     sorted_buckets += p_sort.percentile_sort(bucket, bb.children[-1], depth=depth)
 
-        if bb is not None:
-            bb.link(list(set(sorted_buckets)))
+#         if bb is not None:
+#             bb.link(list(set(sorted_buckets)))
 
         if linearize:
             return sorted_buckets, sorted_buckets_idx

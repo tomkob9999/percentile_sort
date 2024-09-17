@@ -4,7 +4,7 @@
 # Description: a divide and conquer sort algorithm that splits by square root percentiles instead of ranks
 # This optionally generatates a Van Emde Boas like tree that is accessible with O(loglogn) as by-product
 #
-# Version: 1.2.9
+# Version: 1.3.0
 # Author: Tomio Kobayashi
 # Last Update: 2024/9/17
 
@@ -27,7 +27,8 @@ class p_sort:
             
             self.pos1 = -1
             self.pos2 = -1
-            self.sorted_set = None
+#             self.sorted_set = None
+            self.sorted_set = []
 
         def search(self, v, return_node=False):
             return self.searchme(v, self, return_node)
@@ -55,11 +56,12 @@ class p_sort:
                 if prev != sorted_vector[i]:
                     bb = self.search(sorted_vector[i], return_node=True)
                     if sorted_vector[i] == bb.min:
-                        bb.pos1 = i
+                        bb.pos1 = len(self.sorted_set)
                     elif sorted_vector[i] == bb.max:
-                        bb.pos2 = i
+                        bb.pos2 = len(self.sorted_set)
                     prev = sorted_vector[i]
-            self.sorted_set = sorted_vector
+                    self.sorted_set.append(sorted_vector[i])
+#             self.sorted_set = sorted_vector
                 
         def search_from(self, s):
             suc = self.succ(s)
@@ -145,7 +147,11 @@ class p_sort:
             
         if create_btre:
             bb = p_sort.btre()
-            return p_sort.percentile_sort(arr, bb, depth=depth), bb
+            sorted_vector = p_sort.percentile_sort(arr, bb, depth=depth)
+            if bb is not None:
+#                 bb.link(list(set(sorted_vector)))
+                bb.link(sorted_vector)
+            return sorted_vector, bb
         else:
             return p_sort.percentile_sort(arr, depth=depth)
         
@@ -188,12 +194,13 @@ class p_sort:
 
         num_buckets = max(2, int(len(arr)**(1/p_sort.ROOT_POWER)))
         buckets = [[] for _ in range(num_buckets)]
+        minmin = [[np.inf] for _ in range(num_buckets)]
+        maxmax = [[-np.inf] for _ in range(num_buckets)]
 
         # Insert elements into corresponding buckets based on percentile
         for value in arr:
             # Calculate the bucket index based on the value's percentile between min and max
             buckets[min(num_buckets - 1, int((value - min_val) / (max_val - min_val) * num_buckets))].append(value)
-
         # Merge buckets
         sorted_buckets = []
         for bucket in buckets:
@@ -203,8 +210,8 @@ class p_sort:
                 bb.children.append(p_sort.btre())
                 sorted_buckets += p_sort.percentile_sort(bucket, bb.children[-1], depth=depth)
 
-        if bb is not None:
-            bb.link(list(set(sorted_buckets)))
+#         if bb is not None:
+#             bb.link(list(set(sorted_buckets)))
 
         return sorted_buckets
     
