@@ -5,9 +5,9 @@
 # This optionally generatates a Van Emde Boas like tree that is accessible with O(loglogn) as by-product
 #
 # linearize=True preprocess by take log of input data to avoid repeating concentration during recursive partionning.  btre also contains log() values
-# 
+# Latest non-linearization version is 1.3.2
 #
-# Version: 1.3.3
+# Version: 1.3.4
 # Author: Tomio Kobayashi
 # Last Update: 2024/9/17
 
@@ -163,12 +163,18 @@ class p_sort:
                 return -1
             
         def update(self, inserts=[], deletes=[]):
-            c = self.sorted_set[0:]
+            if self.sorted_set_linear:
+                c = self.sorted_set_linear[0:]
+            else:
+                c = self.sorted_set[0:]
             for d in deletes:
                 c.remove(d)
             for i in inserts:
                 c.append(i)
-            return p_sort.sort(c, create_btre=True, link=True)
+            if self.sorted_set_linear:
+                return p_sort.sort(c, create_btre=True, linearize=True)
+            else:
+                return p_sort.sort(c, create_btre=True)
             
     def sort(arr, create_btre=False, find_depth=True, linearize=False):
         depth = -1
@@ -288,4 +294,3 @@ class p_sort:
             return sorted_buckets, sorted_buckets_idx
         else:
             return sorted_buckets
-        
