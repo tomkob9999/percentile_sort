@@ -4,7 +4,7 @@
 # Description: a divide and conquer sort algorithm that splits by square root percentiles instead of ranks
 # This optionally generatates a Van Emde Boas like tree that is accessible with O(loglogn) as by-product
 #
-# Version: 1.3.0
+# Version: 1.3.1
 # Author: Tomio Kobayashi
 # Last Update: 2024/9/17
 
@@ -236,3 +236,79 @@ class p_sort:
 #             bb.link(list(set(sorted_buckets)))
 
         return sorted_buckets
+    
+    def sort_even(arr, create_btre=False, find_depth=True):
+        depth = -1
+        p_sort.deepest = 0
+        if find_depth:
+            depth = 0
+            
+        if create_btre:
+            bb = p_sort.btre()
+            sorted_vector = p_sort.percentile_sort_even(arr, min_val=min(arr), max_val=max(arr), bb=bb, depth=depth)
+            if bb is not None:
+                bb.link(sorted_vector)
+            return sorted_vector, bb
+        else:
+            return p_sort.even_percentile_sort_even(arr, min_val=min(arr), max_val=max(arr), depth=depth)
+        
+    def percentile_sort_even(arr, min_val, max_val, bb=None, is_all_same=False, depth=-1):
+        if depth > -1:
+            depth += 1
+            if depth > p_sort.deepest:
+                p_sort.deepest = depth
+        
+        if len(arr) <= 1:
+            if bb is not None and len(arr) == 1:
+                bb.min = arr[0]
+                bb.len = 0
+            return arr
+        elif len(arr) == 2:
+            if arr[0]>arr[1]:
+                arr[0], arr[1] = arr[1], arr[0]
+
+            if bb is not None:
+                if arr[0] == arr[1]:
+                    bb.min = arr[0]
+                else:
+                    bb.min = arr[0]
+                    bb.max = arr[1]
+                bb.len = 0
+            return arr
+        
+        if is_all_same:
+            if bb is not None:
+                bb.min = arr[0]
+                bb.len = 0
+            return arr
+
+        if bb is not None:
+            bb.len = len(arr)
+            bb.min = min_val
+            bb.max = max_val
+
+        num_buckets = max(2, int(len(arr)**(1/p_sort.ROOT_POWER)))
+        buckets = [[] for _ in range(num_buckets)]
+        interval = (max_val - min_val)/num_buckets
+        min_buckets = [i*interval for i in range(num_buckets)]
+        all_same = [True for _ in range(num_buckets)]
+        # Insert elements into corresponding buckets based on percentile
+        for value in arr:
+            # Calculate the bucket index based on the value's percentile between min and max
+            ind = min(int((value - min_val) / interval), num_buckets - 1)
+            if len(buckets[ind]) != 0 and buckets[ind][-1] != value:
+                all_same[ind] = False
+                
+            buckets[ind].append(value)
+                
+        # Merge buckets
+        sorted_buckets = []
+        for i, bucket in enumerate(buckets):
+            if bb is None :
+                sorted_buckets += p_sort.percentile_sort_even(bucket, min_val+min_buckets[i], min_val+min_buckets[i]+interval, is_all_same=all_same[i], depth=depth)
+            else:
+                bb.children.append(p_sort.btre())
+                sorted_buckets += p_sort.percentile_sort_even(bucket, min_val+min_buckets[i], min_val+min_buckets[i]+interval, bb.children[-1], is_all_same=all_same[i], depth=depth)
+
+        return sorted_buckets
+    
