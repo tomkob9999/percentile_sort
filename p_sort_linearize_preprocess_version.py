@@ -32,8 +32,11 @@ class p_sort:
             self.pos1 = -1
             self.pos2 = -1
             self.sorted_set = []
+            self.sorted_set_linear = []
 
         def search(self, v, return_node=False):
+            if self.sorted_set_linear:
+                v = np.log(v)
             return self.searchme(v, self, return_node)
         
         def searchme(self, v, bb, return_node=False):
@@ -53,39 +56,61 @@ class p_sort:
             else:
                 return self.searchme(v, bb.children[ind], return_node)
                     
-        def link(self, sorted_vector):
+        def link(self, sorted_vector, sorted_vector_linear=[]):
+            if sorted_vector_linear:
+                tmp_linear = []
+                        
             prev = np.inf
             for i, v in enumerate(sorted_vector):
                 if prev != sorted_vector[i]:
                     bb = self.search(sorted_vector[i], return_node=True)
                     if sorted_vector[i] == bb.min:
-#                         bb.pos1 = i
                         bb.pos1 = len(self.sorted_set)
                     elif sorted_vector[i] == bb.max:
-#                         bb.pos2 = i
                         bb.pos2 = len(self.sorted_set)
                     prev = sorted_vector[i]
                     self.sorted_set.append(sorted_vector[i])
-#             self.sorted_set = sorted_vector
+                    if sorted_vector_linear:
+                        tmp_linear.append(sorted_vector_linear[i])
+
+            if sorted_vector_linear:
+                self.sorted_set_linear = tmp_linear
                 
         def search_from(self, s):
+            if self.sorted_set_linear:
+                s = np.log(s)
             suc = self.succ(s)
             if suc == -1:
                 return []
-            return self.sorted_set[suc:]
+            if self.sorted_set_linear:
+                return self.sorted_set_linear[suc:]
+            else:
+                return self.sorted_set[suc:]
         
         def search_to(self, f):
+            if self.sorted_set_linear:
+                f = np.log(f)
             pre = self.prec(f)
             if pre == -1:
                 return []
-            return self.sorted_set[:pre+1]
+            if self.sorted_set_linear:
+                return self.sorted_set_linear[:pre+1]
+            else:
+                return self.sorted_set[:pre+1]
         
         def search_range(self, s, f):
+            if self.sorted_set_linear:
+                s = np.log(s)
+                f = np.log(f)
+                
             suc = self.succ(s)
             pre = self.prec(f)
             if pre < suc or suc == -1 or pre == -1:
                 return []
-            return self.sorted_set[suc:pre+1]
+            if self.sorted_set_linear:
+                return self.sorted_set_linear[suc:pre+1]
+            else:
+                return self.sorted_set[suc:pre+1]
             
 
         def succ(self, s):
@@ -155,15 +180,21 @@ class p_sort:
         else:
             bb = None
         if linearize:
-#                 ret, ret2 = p_sort.percentile_sort(np.log(arr) if min(arr) > 0 else np.log(np.array(arr) - min(arr) + 1), bb=bb, link=link, depth=depth, idx_vector=[], linearize=linearize)
             dat = arr
             for _ in range(LOG_REP):
                 dat = np.log(np.array(arr) - min(arr) + 1)
             ret, ret2 = p_sort.percentile_sort(dat, bb=bb, depth=depth, idx_vector=[], linearize=linearize)
+            
+            sorted_vector = np.array(arr)[ret2].tolist()
+            if bb is not None:
+                bb.link(ret, sorted_vector)
 
-            return np.array(arr)[ret2].tolist(), bb
+            return sorted_vector, bb
         else:
-            return p_sort.percentile_sort(arr, bb=bb, depth=depth, idx_vector=[], linearize=linearize), bb
+            ret = p_sort.percentile_sort(arr, bb=bb, depth=depth, idx_vector=[], linearize=linearize)
+            if bb is not None:
+                bb.link(ret)
+            return ret, bb
             
         
     def percentile_sort(arr, bb=None, depth=-1, idx_vector=[], linearize=False):
@@ -251,9 +282,6 @@ class p_sort:
                     sorted_buckets_idx += sorted_bucket_idx
                 else:
                     sorted_buckets += p_sort.percentile_sort(bucket, bb.children[-1], depth=depth)
-
-#         if bb is not None:
-#             bb.link(list(set(sorted_buckets)))
 
         if linearize:
             return sorted_buckets, sorted_buckets_idx
