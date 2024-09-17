@@ -14,7 +14,7 @@ This algorithm divides into $\sqrt{n}$ pieces in $O(n)$ while Merge Sort takes $
 
 
 
-Sample Test Statistics with another input data of size 1,000,000.  The time complexity was equivalent of above. (The latest version of p_sort which has adjusted root power 1.25 instead of 2 is slighter faster and depth of 7 or lower with the given input size even with very skewed distribution Pareto)
+Sample Test Statistics with another input data of size 1,000,000.  The time complexity was equivalent of above. (NOTE: The latest version of p_sort which has adjusted root power 1.25 instead of 2 is slighter faster than the stats below and constantly depth of 8 or lower with the given or larger input size even with very skewed distribution Pareto)
 
 Float type
 | Sort Type              | Recursion Depth | Number of calls | Average Input Size |
