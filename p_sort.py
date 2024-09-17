@@ -7,7 +7,7 @@
 # linearize=True preprocess by take log of input data to avoid repeating concentration during recursive partionning.  btre also contains log() values
 # Latest non-linearization version is 1.3.2
 #
-# Version: 1.3.6
+# Version: 1.3.7
 # Author: Tomio Kobayashi
 # Last Update: 2024/9/18
 
@@ -19,7 +19,7 @@ import math
 class p_sort:
     
     ROOT_POWER = 1.25 # n^(1/1.25) seems faster than n^(1/2)(=square root)
-    LOG_INIT = 500 # log straightens at abount 500
+    LOG_INIT = 1000 # log straightens at abount 500
     deepest = 0
     
     class btre:
