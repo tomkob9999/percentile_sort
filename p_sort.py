@@ -7,9 +7,9 @@
 # linearize=True preprocess by take log of input data to avoid repeating concentration during recursive partionning.  btre also contains log() values
 # Latest non-linearization version is 1.3.2
 #
-# Version: 1.3.7
+# Version: 1.3.8
 # Author: Tomio Kobayashi
-# Last Update: 2024/9/18
+# Last Update: 2024/9/28
 
 import numpy as np
 import math
@@ -201,7 +201,7 @@ class p_sort:
             else:
                 return sorted_vector
         else:
-            ret = p_sort.percentile_sort(arr, bb=bb, depth=depth, idx_vector=[], linearize=linearize)
+            ret = p_sort.percentile_sort(arr[0:], bb=bb, depth=depth, idx_vector=[], linearize=linearize)
             if bb is not None:
                 bb.link(ret)
             if create_btre:
@@ -273,7 +273,9 @@ class p_sort:
                     idx_buckets[b_idx].append(idx_vector[i])
                 else:
                     idx_buckets[b_idx].append(i)
-                    
+        # save memory     
+        del arr
+        
         # Merge buckets
         sorted_buckets = []
         if linearize:
