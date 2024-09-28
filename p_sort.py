@@ -7,7 +7,7 @@
 # linearize=True preprocess by take log of input data to avoid repeating concentration during recursive partionning.  btre also contains log() values
 # Latest non-linearization version is 1.3.2
 #
-# Version: 1.3.8
+# Version: 1.4.0
 # Author: Tomio Kobayashi
 # Last Update: 2024/9/28
 
@@ -19,7 +19,7 @@ import math
 class p_sort:
     
     ROOT_POWER = 1.25 # n^(1/1.25) seems faster than n^(1/2)(=square root)
-    LOG_INIT = 1000 # log straightens at abount 500
+    LOG_INIT = 1 # log straightens at abount 500, but back to 1 as it seems better for pareto or exponential types
     deepest = 0
     
     class btre:
@@ -191,7 +191,7 @@ class p_sort:
             if create_btre:
                 bb.log_min = min(arr)
             dat = np.log(np.array(arr) - min(arr) + p_sort.LOG_INIT)
-            ret, ret2 = p_sort.percentile_sort(dat, bb=bb, depth=depth, idx_vector=[], linearize=linearize)
+            ret, ret2 = p_sort.percentile_sort(dat.tolist(), bb=bb, depth=depth, idx_vector=[], linearize=linearize)
             sorted_vector = np.array(arr)[ret2].tolist()
             if bb is not None:
                 bb.link(ret, sorted_vector)
@@ -201,7 +201,7 @@ class p_sort:
             else:
                 return sorted_vector
         else:
-            ret = p_sort.percentile_sort(arr[0:], bb=bb, depth=depth, idx_vector=[], linearize=linearize)
+            ret = p_sort.percentile_sort(arr, bb=bb, depth=depth, idx_vector=[], linearize=linearize)
             if bb is not None:
                 bb.link(ret)
             if create_btre:
@@ -263,7 +263,7 @@ class p_sort:
             idx_buckets = [[] for _ in range(num_buckets)]
 
 
-        # Insert elements into corresponding buckets based on percentile
+#         Insert elements into corresponding buckets based on percentile
         for i, value in enumerate(arr):
             # Calculate the bucket index based on the value's percentile between min and max
             b_idx = min(num_buckets - 1, int((value - min_val) / (max_val - min_val) * num_buckets))
@@ -273,8 +273,6 @@ class p_sort:
                     idx_buckets[b_idx].append(idx_vector[i])
                 else:
                     idx_buckets[b_idx].append(i)
-        # save memory     
-        del arr
         
         # Merge buckets
         sorted_buckets = []
@@ -301,4 +299,3 @@ class p_sort:
             return sorted_buckets, sorted_buckets_idx
         else:
             return sorted_buckets
-        
